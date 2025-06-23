@@ -20,9 +20,9 @@ const dbState = [
   },
 ];
 
-const connection = async () => {
+const connectDB = async () => {
   await mongoose.connect(process.env.MONGO_DB);
   const state = Number(mongoose.connection.readyState);
   console.log(dbState.find((f) => f.value === state).label, "to database"); // connected to db
 };
-module.exports = connection;
+module.exports = connectDB;

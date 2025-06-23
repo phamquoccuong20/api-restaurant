@@ -1,5 +1,5 @@
 const express = require("express");
-const userController = require("../controllers/userControlle");
+const userController = require("../controllers/userController");
 const restaurantAPI = express.Router();
 
 restaurantAPI.post("/login", userController.loginUser);
