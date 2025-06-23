@@ -29,6 +29,7 @@ const hashPassword = async (password) => {
   }
 };
 
+
 const create = async (data) => {
   try {
     let checkEmail = await checkUserEmail(data.email);
@@ -40,6 +41,10 @@ const create = async (data) => {
         name: data.name,
         password: hashSync,
         email: data.email,
+        phone: data.phone,
+        dateOfBirth: data.dateOfBirth,
+        role: data.role,
+        confirmPassword: data.confirmPassword,
       });
       return {
         status: 200,
@@ -47,6 +52,7 @@ const create = async (data) => {
       };
     }
   } catch (error) {
+    console.log(error);
     return { status: 500, errors: { msg: error.message } };
   }
 };
@@ -60,7 +66,7 @@ const loginService = async (email, password) => {
       if (!checkPassword) {
         return {
           status: 400,
-          message: "Invalid Email/Password",
+          message: "Invalid password or email",
         };
       } else {
         const refreshTokenSecret = nanoid();
