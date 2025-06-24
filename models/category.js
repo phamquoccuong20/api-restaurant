@@ -1,4 +1,4 @@
-import mongoose, { mongo }  from "mongoose";
+const mongoose = require("mongoose");
 const mongoose_delete = require("mongoose-delete");
 
 const categorySchema = new mongoose.Schema(
@@ -9,9 +9,6 @@ const categorySchema = new mongoose.Schema(
    unique: true,
   },
   description: {
-   type: String,
-  }, 
-  image: {
    type: String,
   },
   isActive: {

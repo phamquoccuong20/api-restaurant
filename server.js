@@ -6,6 +6,7 @@ const userRouter = require("./routers/userRouter");
 const app = express();
 const port = process.env.PORT || 8888;
 const { errorHandler } = require('./middleware/errorHandler');
+const categoryRouter = require("./routers/categoryRouter");
 
 app.use(cors());
 //config req.body
@@ -23,7 +24,8 @@ app.listen(port, ()=> {
 });
 
 
-app.use("/api/v1", userRouter);
+app.use("/api/v1/users", userRouter);
+app.use("/api/v1/categories", categoryRouter);
 app.use((req, res) => {
  res.status(404).json({
     status: 404,  

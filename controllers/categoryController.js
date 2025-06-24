@@ -1,6 +1,8 @@
 const categoryService = require("../services/categoryService");
 
-class CategoryController { 
+
+
+class CategoryController {
 
  async getAll(req, res) { 
   try {

@@ -19,6 +19,23 @@ const checkUserEmail = async (email) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+const changePassword = async (id, oldPassword, newPassword) => {
+  try {
+    const user = await Users.findById(id);
+    if(!user) {
+      return { status: 404, message: "User not found" };
+    }
+    const checkPassword = await bcrypt.compareSync(oldPassword, user.password);
+    if(!checkPassword) {
+      return { status: 400, message: "Invalid password" };
+    }
+    const hashSync = await hashPassword(newPassword);
+    user.password = hashSync;
+    await user.save();
+  }catch(error) {
+    return { status: 500, message: "Server error" };
+  }
+}
 
 const hashPassword = async (password) => {
   try {
@@ -92,5 +109,23 @@ const loginService = async (email, password) => {
     }
   } catch (error) {}
 };
+const getAllUsers = async () => {
+  const users = await Users.find();
+  return users;
+}
 
-module.exports = { create, loginService };
+const getUserById = async (id) => {
+  const user = await Users.findById(id);
+  return user;
+}
+const updateUser = async (id, data) => {
+  const user = await Users.findByIdAndUpdate(id, data, { new: true });
+  return user;
+}
+const deleteUser = async (id) => {
+  const user = await Users.findByIdAndDelete(id);
+  return user;
+}
+
+
+module.exports = { create, loginService, getAllUsers, getUserById, updateUser, deleteUser, changePassword};

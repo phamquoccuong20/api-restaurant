@@ -12,11 +12,14 @@ exports.isAuthenticated = async (req, res, next) => {
         message: 'Authentication required. No token provided.'
       })
     }
-    //get token from header
     const token = authHeader.split(" ")[1];
-    //verify token 
     const decoded = jwt.verify(token, process.env.JWT_SECRET)
-
+    if(decoded.exp < Date.now() / 1000) {
+      return res.status(401).json({
+        status: 'error', 
+        message: 'Token has expired'
+      })
+    }
     const user = await User.findById(decoded.userId).select("-password");
     if(!user) { 
       return res.status(401).json({
@@ -24,17 +27,7 @@ exports.isAuthenticated = async (req, res, next) => {
         message: 'User not found or token is invalid'
       })
     }
-
-     // Check if token is expired
-    if (decoded.exp < Date.now() / 1000) {
-      return res.status(401).json({
-        status: 'error',
-        message: 'Token has expired'
-      });
-    }
-
-    //attach user to request object 
-     req.user = user; 
+    req.user = user; 
      next();
     
   }catch(error) {
@@ -54,6 +47,16 @@ exports.isAdmin = async (req, res, next) => {
       status: 'error',
       message: 'Access denied. Admin access required.'
     });
+  }
+}
+exports.isStaff = async (req, res, next) => {
+  if(req.user && req.user.role === "STAFF"){
+    next();
+  }else { 
+    return res.status(403).json({ 
+      status: 'error',
+      message: 'Access denied. Staff access required.'
+    })
   }
 }
 
