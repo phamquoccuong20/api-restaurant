@@ -1,20 +1,18 @@
 const categoryService = require("../services/categoryService");
 const { HttpStatusCode } = require("axios");
-
 class CategoryController {
-  async getAll(req, res) {
-    try {
-      const categories = await categoryService.getAllCategories();
-      return res.status(200).json({
-        status: "success",
-        data: categories,
-      });
-    } catch (error) {
-      return res.status(error.statusCode).json({
-        status: error.statusCode,
-        message: error.message,
-      });
-    }
+
+ async getAll(req, res) { 
+  try {
+    const categories = await categoryService.getAllCategories();
+    return res.status(200).json({
+      status: "success",
+      data: categories,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: "error",
+    });
   }
 
   async getById(req, res) {

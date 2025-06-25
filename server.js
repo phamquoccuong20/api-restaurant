@@ -23,7 +23,6 @@ app.listen(port, () => {
     console.log(">>> Error connect to DB: ", error);
   }
 });
-
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/tables", tableRouter);

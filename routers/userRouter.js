@@ -2,6 +2,7 @@ const express = require("express");
 const userController = require("../controllers/userController");
 const userRouter = express.Router();
 const validateUser = require("../validators/userValidator");
+
 const {
   isAuthenticated,
   isAdmin,
@@ -19,7 +20,6 @@ userRouter.get("/", isAuthenticated, isAdmin, userController.getAllUsers);
 userRouter.get("/:id", isAuthenticated, isAdmin, userController.getUserById);
 userRouter.put("/:id", isAuthenticated, isAdmin, userController.updateUser);
 userRouter.delete("/:id", isAuthenticated, isAdmin, userController.deleteUser);
-
 //authenticated only
 userRouter.post(
   "/change-password",
@@ -28,3 +28,4 @@ userRouter.post(
 );
 
 module.exports = userRouter;
+

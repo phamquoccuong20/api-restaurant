@@ -16,10 +16,18 @@ const categorySchema = new mongoose.Schema(
       default: true,
     },
   },
-  {
-    timestamps: true,
-  }
-);
+  description: {
+   type: String,
+  },
+  isActive: {
+   type: Boolean,
+   default: true,
+  },
+ },
+ {
+  timestamps: true, 
+ }
+)
 
 categorySchema.plugin(mongoose_delete, { overrideMethods: "all" });
 const Category = mongoose.model("Category", categorySchema);
