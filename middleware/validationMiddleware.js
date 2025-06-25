@@ -1,9 +1,9 @@
 const validation = (schema) => {
   return (req, res, next) => {
     const validationOptions = {
-      abortEarly: false, 
-      allowUnknown: true, 
-      stripUnknown: true 
+      abortEarly: false,
+      allowUnknown: true,
+      stripUnknown: true,
     };
 
     const { error, value } = schema.validate(
@@ -16,15 +16,15 @@ const validation = (schema) => {
     );
 
     if (error) {
-      const validationErrors = error.details.map(detail => ({
-        field: detail.path.join('.'),
-        message: detail.message
+      const validationErrors = error.details.map((detail) => ({
+        field: detail.path.join("."),
+        message: detail.message,
       }));
 
       return res.status(400).json({
-        status: 'error',
-        message: 'Validation failed',
-        errors: validationErrors
+        status: "error",
+        message: "Validation failed",
+        errors: validationErrors,
       });
     }
 
@@ -32,7 +32,7 @@ const validation = (schema) => {
     req.body = value.body;
     req.query = value.query;
     req.params = value.params;
-    
+
     return next();
   };
 };

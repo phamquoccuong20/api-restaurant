@@ -3,7 +3,7 @@ const Users = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { nanoid } = require("nanoid");
-const uuid = require("uuid");
+const cache = require("../cache/caching");
 
 const salt = bcrypt.genSaltSync(12);
 
@@ -19,6 +19,23 @@ const checkUserEmail = async (email) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+const changePassword = async (id, oldPassword, newPassword) => {
+  try {
+    const user = await Users.findById(id);
+    if (!user) {
+      return { status: 404, message: "User not found" };
+    }
+    const checkPassword = await bcrypt.compareSync(oldPassword, user.password);
+    if (!checkPassword) {
+      return { status: 400, message: "Invalid password" };
+    }
+    const hashSync = await hashPassword(newPassword);
+    user.password = hashSync;
+    await user.save();
+  } catch (error) {
+    return { status: 500, message: "Server error" };
+  }
+};
 
 const hashPassword = async (password) => {
   try {
@@ -28,7 +45,6 @@ const hashPassword = async (password) => {
     return error;
   }
 };
-
 
 const create = async (data) => {
   try {
@@ -44,10 +60,12 @@ const create = async (data) => {
         phone: data.phone,
         dateOfBirth: data.dateOfBirth,
         role: data.role,
+        status: data.status,
         confirmPassword: data.confirmPassword,
       });
+      cache.del("user_all");
       return {
-        status: 200,
+        status: 201,
         users: user,
       };
     }
@@ -92,5 +110,52 @@ const loginService = async (email, password) => {
     }
   } catch (error) {}
 };
+const getAllUsers = async () => {
+  const cacheKey = "user_all";
+  const cached = cache.get(cacheKey);
+  if (cached) {
+    return { source: "cache", data: cached };
+  }
+  const users = await Users.find({ isDeleted: false }).select("-password");
+  cache.set(cacheKey, users);
+  return users;
+};
 
-module.exports = { create, loginService };
+const getUserById = async (id) => {
+  const cacheKey = id;
+  const cached = cache.get(cacheKey);
+  if (cached) {
+    return { source: "cache", data: cached };
+  }
+  const user = await Users.findById(id).select("-password");
+  cache.set(cacheKey, user);
+  return user;
+};
+const updateUser = async (id, data) => {
+  const user = await Users.findByIdAndUpdate(id, data, { new: true });
+  return user;
+};
+const deleteUser = async (id) => {
+  try {
+    const user = await Users.findByIdAndUpdate(
+      id,
+      { isDeleted: true },
+      { new: true }
+    );
+    x;
+    return user;
+  } catch (error) {
+    console.log(error);
+    return { status: 500, errors: { msg: error.message } };
+  }
+};
+
+module.exports = {
+  create,
+  loginService,
+  getAllUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
+  changePassword,
+};
