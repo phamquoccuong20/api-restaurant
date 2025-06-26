@@ -49,7 +49,6 @@ class TableController {
   async update(req, res) {
     try {
       const updatedTable = await tableService.update(req.params.id, req.body);
-
       if (!updatedTable) {
         return res.status(404).json({
           status: "error",
@@ -85,5 +84,27 @@ class TableController {
       });
     }
   }
+  async softDelete(req, res) { 
+    try { 
+      const deletedTable= await tableService.softDelete(req.params.id);
+      if(!deletedTable) { 
+        return res.status(404).json({
+          status: "error",
+          message: "Table not found",
+        })
+      }
+      return res.status(200).json({
+        status: "success",
+        message: "Table deleted successfully",
+        data: deletedTable,
+      }); 
+    }catch(error) { 
+      return res.status(200).json({
+        status: "error", 
+        message: error.message,
+      })
+    }
+  }
+  
 }
 module.exports = new TableController();
