@@ -15,6 +15,17 @@ const categorySchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    description: {
+      type: String,
+    },
+    isDeleted: {
+      type: Boolean,
+      default: false,
+    },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
   },
  {
   timestamps: true, 

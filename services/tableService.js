@@ -54,6 +54,19 @@ class TableService {
       { new: true }
     );
   }
+  async softDelete(id) {
+    const deletedTable = await Table.findByIdAndUpdate(
+      id,
+      { isDeleted: true },
+      {
+        new: true,
+      }
+    );
+    if (!deletedTable) {
+      throw new Error("Table not found");
+    }
+    return deletedTable;
+  }
 }
 
 module.exports = new TableService();
