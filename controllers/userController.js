@@ -39,29 +39,7 @@ const createUser = async (req, res) => {
     });
   }
 };
-const changePassword = async (req, res) => {
-  try {
-    const { oldPassword, newPassword } = req.body;
-    const user = req.user;
-    const data = await userService.changePassword(
-      user._id,
-      oldPassword,
-      newPassword
-    );
-    if (data.status !== 200) {
-      throw new AppError(data.message, HttpStatusCode.BadRequest);
-    }
-    return res.status(200).json({
-      status: 200,
-      message: "Password changed successfully",
-    });
-  } catch (error) {
-    return res.status(error.statusCode).json({
-      status: error.statusCode,
-      message: error.message,
-    });
-  }
-};
+
 const getMe = async (req, res) => {
   try {
     const user = req.user;
@@ -96,21 +74,7 @@ const changePassword = async (req, res) => {
     });
   }
 }
-const getMe = async (req, res) => {
-  try {
-    const user = req.user;
-    return res.status(200).json({
-      status: 200,
-      message: "User fetched successfully",
-      data: user
-    });
-  }catch(error) {
-    return res.status(error.statusCode).json({
-      status: error.statusCode,
-      message: error.message
-    });
-  }
-}
+
 const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
