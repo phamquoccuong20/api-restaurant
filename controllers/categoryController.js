@@ -14,6 +14,7 @@ class CategoryController {
       status: "error",
     });
   }
+}
 
   async getById(req, res) {
     try {
@@ -86,5 +87,5 @@ class CategoryController {
       });
     }
   }
-}
+};
 module.exports = new CategoryController();
