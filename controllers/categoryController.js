@@ -14,7 +14,7 @@ class CategoryController {
       status: "error",
     });
   }
-
+ }
   async getById(req, res) {
     try {
       const category = await categoryService.getById(req.params.id);
