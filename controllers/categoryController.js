@@ -19,7 +19,7 @@ class CategoryController {
       message: error.message,
     });
   }
-}
+ }
 
   async getById(req, res) {
     try {

@@ -27,9 +27,9 @@ const categorySchema = new mongoose.Schema(
       default: true,
     },
   },
-  {
-    timestamps: true,
-  }
+ {
+  timestamps: true, 
+ }
 )
 
 categorySchema.plugin(mongoose_delete, { overrideMethods: "all" });
