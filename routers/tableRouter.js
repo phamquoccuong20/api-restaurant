@@ -14,8 +14,8 @@ router.get("/:id", tableController.getById);
 //protected routes (admin only)
 router.post(
   "/",
-  // isAuthenticated,
-  // isAdmin,
+  isAuthenticated,
+  isAdmin,
   validateTable,
   tableController.create
 );
