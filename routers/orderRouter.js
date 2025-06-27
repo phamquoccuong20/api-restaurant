@@ -8,24 +8,12 @@ const {
 const { isAuthenticated, isAdmin } = require("../middleware/authMiddleware");
 
 //public routes
-router.get("/", orderController.getAll);
+router.get("/all", orderController.getAll);
 router.get("/:id", orderController.getById);
 
 //protected routes (admin only)
-router.post(
-  "/",
-  // isAuthenticated,
-  // isAdmin,
-  validateOrder,
-  orderController.create
-);
-router.put(
-  "/:id",
-  // isAuthenticated,
-  // isAdmin,
-  validateUpdateOrder,
-  orderController.update
-);
-router.delete("/:id", isAuthenticated, isAdmin, orderController.delete);
+router.post("/create", isAuthenticated, isAdmin, validateOrder, orderController.create);
+router.put("/update/:id", isAuthenticated, isAdmin, validateUpdateOrder, orderController.update);
+router.delete("/delete/:id", isAuthenticated, isAdmin, orderController.delete);
 
 module.exports = router;
