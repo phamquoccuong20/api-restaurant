@@ -11,10 +11,10 @@ userRouter.post("/login", userController.loginUser);
 userRouter.get("/me", isAuthenticated, userController.getMe);
 
 //admin only
-userRouter.get("/", isAuthenticated, isAdmin, userController.getAllUsers);
-userRouter.get("/:id", isAuthenticated, isAdmin, userController.getUserById);
-userRouter.put("/:id", isAuthenticated, isAdmin, userController.updateUser);
-userRouter.delete("/:id", isAuthenticated, isAdmin, userController.deleteUser);
+userRouter.get("/admin/users", isAuthenticated, isAdmin, userController.getAllUsers);
+userRouter.get("/admin/users/:id", isAuthenticated, isAdmin, userController.getUserById);
+userRouter.put("/admin/update/:id", isAuthenticated, isAdmin, userController.updateUser);
+userRouter.delete("/admin/delete/:id", isAuthenticated, isAdmin, userController.deleteUser);
  
 //authenticated only
 userRouter.post("/change-password", isAuthenticated, userController.changePassword);
