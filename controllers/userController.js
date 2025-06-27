@@ -4,23 +4,43 @@ const { AppError } = require("../middleware/errorHandler");
 
 const createUser = async (req, res) => {
   try {
-    const { name, email, password, dateOfBirth, role, phone, confirmPassword } = req.body;
-    const newuser = await userService.create({name, email, password, dateOfBirth, role, phone, confirmPassword});
+    const {
+      name,
+      email,
+      password,
+      dateOfBirth,
+      role,
+      phone,
+      confirmPassword,
+      status,
+    } = req.body;
+    const newuser = await userService.create({
+      name,
+      email,
+      password,
+      dateOfBirth,
+      role,
+      status,
+      phone,
+      confirmPassword,
+    });
 
-    if(newuser.status !== 200) {
+    if (newuser.status !== 200) {
       throw new AppError(newuser.message, HttpStatusCode.BadRequest);
     }
     return res.status(HttpStatusCode.Created).json({
-      status: 201, 
-      message: "User created successfully"
+      status: 201,
+      message: "User created successfully",
     });
   } catch (error) {
-      return res.status(error.statusCode).json({
-        status: error.statusCode,
-        message: error.message
-      });
+    return res.status(error.statusCode).json({
+      status: error.statusCode,
+      message: error.message,
+    });
   }
 };
+
+
 const changePassword = async (req, res) => {
   try {
     const { oldPassword, newPassword} = req.body;
@@ -61,14 +81,14 @@ const loginUser = async (req, res) => {
     const data = await userService.loginService(email, password);
 
     if (data.status !== 200) {
-        throw new AppError(data.message, HttpStatusCode.BadRequest);
-      }
+      throw new AppError(data.message, HttpStatusCode.BadRequest);
+    }
 
     return res.status(200).json(data);
   } catch (error) {
     return res.status(error.statusCode).json({
       status: error.statusCode,
-      message: error.message
+      message: error.message,
     });
   }
 };

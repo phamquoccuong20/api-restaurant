@@ -3,24 +3,24 @@ const mongoose_delete = require("mongoose-delete");
 
 const reservationSchema = new mongoose.Schema(
   {
-    customer: { 
-      type: mongoose.Schema.Types.ObjectId, 
+    customer: {
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true 
+      required: true,
     },
-    table: { 
-      type: mongoose.Schema.Types.ObjectId, 
+    table: {
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Table",
       required: true,
     },
     reservationDate: { type: Date, required: true },
     reservationTime: { type: String, required: true },
-    duration: { type: Number, default: 2 }, 
+    duration: { type: Number, default: 2 },
     numberOfGuests: { type: Number, required: true },
-    status: { 
-      type: String, 
-      enum: ["PENDING", "CONFIRMED", "CANCELLED", "COMPLETED"], 
-      default: "PENDING" 
+    status: {
+      type: String,
+      enum: ["PENDING", "CONFIRMED", "CANCELLED", "COMPLETED"],
+      default: "PENDING",
     },
     specialRequests: { type: String },
     contactPhone: { type: String, required: true },
