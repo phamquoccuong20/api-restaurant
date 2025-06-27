@@ -9,10 +9,7 @@ class OrderService {
       if (cached) {
         return { source: "cache", data: cached };
       }
-      const data = await Order.find({ isDeleted: false }).populate(
-        "category",
-        "name"
-      );
+      const data = await Order.find({isAvailable: true}).populate('customer', "-password").populate('table');
       cache.set(cacheKey, data);
 
       return data;
