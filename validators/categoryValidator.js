@@ -37,5 +37,5 @@ const validateUpdateCategory = validation(updateCategorySchema);
 
 module.exports = {
   validateCategory,
-  validateUpdateCategory
-}
+  validateUpdateCategory,
+};
