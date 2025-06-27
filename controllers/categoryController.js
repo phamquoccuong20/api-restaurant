@@ -19,7 +19,6 @@ class CategoryController {
       });
     }
   }
- 
   async getById(req, res) {
     try {
       const category = await categoryService.getById(req.params.id);
@@ -38,14 +37,16 @@ class CategoryController {
   async create(req, res) {
     try {
       const newCategory = await categoryService.create(req.body);
-      if (!newCategory) {
-        throw new AppError("Category not created", HttpStatusCode.BadRequest);
-      }
-      return res.status(HttpStatusCode.Created).json({
+
+      if (newCategory.status !== 201) {
+      throw new AppError(newCategory.message, HttpStatusCode.BadRequest);
+    } else {
+        return res.status(HttpStatusCode.Created).json({
         status: "success",
         data: newCategory,
         message: "Category created successfully",
       });
+    }
     } catch (error) {
       return res.status(500).json({
         status: "error",
@@ -53,6 +54,7 @@ class CategoryController {
       });
     }
   }
+  
   async update(req, res) {
     try {
       const updatedCategory = await categoryService.update(
