@@ -1,25 +1,24 @@
 const categoryService = require("../services/categoryService");
 const { HttpStatusCode } = require("axios");
 class CategoryController {
-
- async getAll(req, res) { 
-  try {
-    const {page, limit} = req.query;
-    const categories = await categoryService.getAllCategories(page, limit);
-    return res.status(200).json({
-      status: "success",
-      data: categories.data,
-      total: categories.length,
-      page,
-      limit,
-    });
-  } catch (error) {
-    return res.status(error.statusCode).json({
-      status: error.statusCode,
-      message: error.message,
-    });
+  async getAll(req, res) {
+    try {
+      const { page, limit } = req.query;
+      const categories = await categoryService.getAllCategories(page, limit);
+      return res.status(200).json({
+        status: "success",
+        data: categories.data,
+        total: categories.length,
+        page,
+        limit,
+      });
+    } catch (error) {
+      return res.status(error.statusCode).json({
+        status: error.statusCode,
+        message: error.message,
+      });
+    }
   }
- }
 
   async getById(req, res) {
     try {
@@ -39,7 +38,7 @@ class CategoryController {
   async create(req, res) {
     try {
       const newCategory = await categoryService.create(req.body);
-      if(!newCategory) {
+      if (!newCategory) {
         throw new AppError("Category not created", HttpStatusCode.BadRequest);
       }
       return res.status(HttpStatusCode.Created).json({
@@ -96,9 +95,9 @@ class CategoryController {
       });
     }
   }
-  asycn deleteSoft(req, res)  {
+  async deleteSoft(req, res) {
     try {
-      const id = req.params.id; 
+      const id = req.params.id;
       const deletedCategory = await categoryService.deleteSoft(id);
       if (!deletedCategory) {
         return res.status(404).json({
@@ -111,12 +110,12 @@ class CategoryController {
         data: deletedCategory,
         message: "Category deleted successfully",
       });
-    }catch(error) { 
+    } catch (error) {
       return res.status(500).json({
         status: "error",
         message: error.message,
       });
     }
   }
-};
+}
 module.exports = new CategoryController();

@@ -9,7 +9,7 @@ const { errorHandler } = require("./middleware/errorHandler");
 const categoryRouter = require("./routers/categoryRouter");
 const tableRouter = require("./routers/tableRouter");
 const menuRouter = require("./routers/menuRouter");
-const orderRouter=require("./routers/orderRouter")
+const orderRouter = require("./routers/orderRouter");
 
 app.use(cors());
 //config req.body

@@ -8,7 +8,7 @@ class CategoryService {
     if (cached) {
       return { source: "cache", data: cached };
     }
-    const data = await Category.find({ isActive: true })
+    const data = await Category.find({ isActive: true, isDeleted: false })
       .skip((page - 1) * limit)
       .limit(limit)
       .sort({ createdAt: -1 });
@@ -47,15 +47,23 @@ class CategoryService {
     );
   }
   async deleteSoft(id) {
-    const category = await Category.findByIdAndUpdate(id, {
-      isDeleted: true,
-    }, { new: true });
+    const category = await Category.findByIdAndUpdate(
+      id,
+      {
+        isDeleted: true,
+      },
+      { new: true }
+    );
     return category;
   }
   async restore(id) {
-    const category = await Category.findByIdAndUpdate(id, {
-      isDeleted: false,
-    }, { new: true });
+    const category = await Category.findByIdAndUpdate(
+      id,
+      {
+        isDeleted: false,
+      },
+      { new: true }
+    );
     return category;
   }
 }

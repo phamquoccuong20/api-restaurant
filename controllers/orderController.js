@@ -69,10 +69,9 @@ class MenuController {
     try {
       const deletedOrder = await orderService.delete(req.params.id);
       if (!deletedOrder) {
-        return res.status(404).json({
-          status: "error",
-          message: "Order not found",
-        });
+        return res
+          .status(404)
+          .json({ status: "error", message: "Order not found" });
       }
       return res.status(200).json({
         status: "success",
