@@ -27,4 +27,3 @@ userRouter.delete("/admin/delete/:id", isAuthenticated, isAdmin, userController.
 userRouter.post("/change-password", isAuthenticated, userController.changePassword);
 
 module.exports = userRouter;
-

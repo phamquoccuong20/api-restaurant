@@ -99,7 +99,7 @@ const loginService = async (email, password) => {
         const payload = { userId: user._id, email: user.email };
         const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPRIE });
         const refreshToken = jwt.sign(payload, refreshTokenSecret, { expiresIn: "7d" });
-
+        
         user.password = undefined;
         return {
           status: 200,
@@ -162,4 +162,3 @@ module.exports = {
   deleteUser,
   changePassword,
 };
-

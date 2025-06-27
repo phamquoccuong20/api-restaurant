@@ -1,13 +1,13 @@
-const tableService = require("../services/tableService");
+const menuService = require("../services/menuService");
 const { HttpStatusCode } = require("axios");
 
-class TableController {
+class MenuController {
   async getAll(req, res) {
     try {
-      const tables = await tableService.getAllTables();
+      const menus = await menuService.getAllMenus();
       return res.status(200).json({
         status: "success",
-        data: tables,
+        data: menus,
       });
     } catch (error) {
       return res.status(error.statusCode).json({
@@ -19,10 +19,10 @@ class TableController {
 
   async getById(req, res) {
     try {
-      const table = await tableService.getById(req.params.id);
+      const menu = await menuService.getById(req.params.id);
       return res.status(200).json({
         status: "success",
-        data: table,
+        data: menu,
       });
     } catch (error) {
       return res.status(500).json({
@@ -33,11 +33,14 @@ class TableController {
 
   async create(req, res) {
     try {
-      const newTable = await tableService.create(req.body);
+      // link ảnh trên cloudinary
+      const image_url = req.body.image_url;
+      const menuData = { ...req.body, image_url };
+      const newMenu = await menuService.create(menuData);
       return res.status(HttpStatusCode.Created).json({
         status: "success",
-        data: newTable,
-        message: "Table created successfully",
+        data: newMenu,
+        message: "Menu created successfully",
       });
     } catch (error) {
       return res.status(500).json({
@@ -48,14 +51,15 @@ class TableController {
   }
   async update(req, res) {
     try {
-      const updatedTable = await tableService.update(req.params.id, req.body);
-      if (!updatedTable) {
+      const updatedMenu = await menuService.update(req.params.id, req.body);
+
+      if (!updatedMenu) {
         return res.status(404).json({
           status: "error",
-          message: "Table not found",
+          message: "Menu not found",
         });
       }
-      return res.status(200).json(updatedTable);
+      return res.status(200).json(updatedMenu);
     } catch (error) {
       return res.status(500).json({
         status: "error",
@@ -66,8 +70,8 @@ class TableController {
 
   async delete(req, res) {
     try {
-      const deletedTable = await tableService.delete(req.params.id);
-      if (!deletedTable) {
+      const deletedMenu = await menuService.delete(req.params.id);
+      if (!deletedMenu) {
         return res.status(404).json({
           status: "error",
           message: "Table not found",
@@ -75,7 +79,7 @@ class TableController {
       }
       return res.status(200).json({
         status: "success",
-        message: "Table deleted successfully",
+        message: "Menu deleted successfully",
       });
     } catch (error) {
       return res.status(500).json({
@@ -84,27 +88,5 @@ class TableController {
       });
     }
   }
-  async softDelete(req, res) { 
-    try { 
-      const deletedTable= await tableService.softDelete(req.params.id);
-      if(!deletedTable) { 
-        return res.status(404).json({
-          status: "error",
-          message: "Table not found",
-        })
-      }
-      return res.status(200).json({
-        status: "success",
-        message: "Table deleted successfully",
-        data: deletedTable,
-      }); 
-    }catch(error) { 
-      return res.status(200).json({
-        status: "error", 
-        message: error.message,
-      })
-    }
-  }
-  
 }
-module.exports = new TableController();
+module.exports = new MenuController();

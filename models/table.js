@@ -16,6 +16,7 @@ const tableSchema = new mongoose.Schema(
       default: "INSIDE",
     },
     isActive: { type: Boolean, default: true },
+    isDeleted: { type: Boolean, default: false },
   },
   {
     timestamps: true,
