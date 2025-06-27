@@ -93,7 +93,7 @@ const loginService = async (email, password) => {
           email: user.email,
           password: user.password,
         };
-        const access_token = jwt.sign(payload, process.env.JWT_SECRET, {
+        const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
           expiresIn: process.env.JWT_EXPRIE,
         });
 
@@ -103,7 +103,7 @@ const loginService = async (email, password) => {
 
         return {
           status: 200,
-          access_token,
+          accessToken,
           refreshToken,
         };
       }
