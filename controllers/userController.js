@@ -25,13 +25,14 @@ const createUser = async (req, res) => {
       confirmPassword,
     });
 
-    if (newuser.status !== 200) {
+    if (newuser.status !== 201) {
       throw new AppError(newuser.message, HttpStatusCode.BadRequest);
+    } else {
+        return res.status(HttpStatusCode.Created).json({
+        status: 201,
+        message: "User created successfully",
+      });
     }
-    return res.status(HttpStatusCode.Created).json({
-      status: 201,
-      message: "User created successfully",
-    });
   } catch (error) {
     return res.status(error.statusCode).json({
       status: error.statusCode,
