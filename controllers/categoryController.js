@@ -19,7 +19,6 @@ class CategoryController {
       });
     }
   }
-
   async getById(req, res) {
     try {
       const category = await categoryService.getById(req.params.id);

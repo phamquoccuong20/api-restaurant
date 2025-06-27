@@ -1,14 +1,10 @@
-const { required } = require("joi");
+
 const mongoose = require("mongoose");
 const mongoose_delete = require("mongoose-delete");
 
 const orderSchema = new mongoose.Schema(
   {
-    customer: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
+    customer: { type: mongoose.Schema.Types.ObjectId, ref: "user", required: true },
     table: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Table", // Liên kết với bảng table

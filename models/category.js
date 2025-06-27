@@ -15,15 +15,12 @@ const categorySchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
-    isDeleted: {
-      type: Boolean,
-      default: false,
-    },
   },
-  {
-    timestamps: true,
-  }
+ {
+  timestamps: true, 
+ }
 )
+
 categorySchema.plugin(mongoose_delete, { overrideMethods: "all" });
 const Category = mongoose.model("Category", categorySchema);
 
