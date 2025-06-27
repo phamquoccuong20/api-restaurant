@@ -79,6 +79,14 @@ const loginService = async (email, password) => {
   try {
     let user = await Users.findOne({ email: email });
 
+        // Kiểm tra nếu không tìm thấy người dùng
+    if (!user) {
+      return {
+        status: 400,
+        message: "Invalid password or email",
+      };
+    }
+
     if (user) {
       const checkPassword = await bcrypt.compareSync(password, user.password);
       if (!checkPassword) {
