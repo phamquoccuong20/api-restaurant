@@ -21,10 +21,6 @@ userRouter.get("/:id", isAuthenticated, isAdmin, userController.getUserById);
 userRouter.put("/:id", isAuthenticated, isAdmin, userController.updateUser);
 userRouter.delete("/:id", isAuthenticated, isAdmin, userController.deleteUser);
 //authenticated only
-userRouter.post(
-  "/change-password",
-  isAuthenticated,
-  userController.changePassword
-);
+userRouter.post("/change-password", isAuthenticated, userController.changePassword);
 
 module.exports = userRouter;

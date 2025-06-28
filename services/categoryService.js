@@ -8,8 +8,7 @@ class CategoryService {
     if (cached) {
       return { source: "cache", data: cached };
     }
-    const data = await Category.find({ isActive: true, isDeleted: false })
-      .skip((page - 1) * limit)
+    const data = await Category.find({ isActive: true }).skip((page - 1) * limit)
       .limit(limit)
       .sort({ createdAt: -1 });
     cache.set(cacheKey, data);

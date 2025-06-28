@@ -4,10 +4,12 @@ const { HttpStatusCode } = require("axios");
 class MenuController {
   async getAll(req, res) {
     try {
-      const menus = await menuService.getAllMenus();
+      const {page, limit} = req.query;
+      const menus = await menuService.getAllMenus(page, limit);
       return res.status(200).json({
         status: "success",
-        data: menus,
+        data: menus.data,
+        total: menus.length,
       });
     } catch (error) {
       return res.status(error.statusCode).json({
@@ -37,11 +39,16 @@ class MenuController {
       const image_url = req.body.image_url;
       const menuData = { ...req.body, image_url };
       const newMenu = await menuService.create(menuData);
-      return res.status(HttpStatusCode.Created).json({
-        status: "success",
-        data: newMenu,
-        message: "Menu created successfully",
-      });
+
+      if (newMenu.status !== 201) {
+            throw new AppError(newMenu.message, HttpStatusCode.BadRequest);
+          } else {
+            return res.status(HttpStatusCode.Created).json({
+            status: "success",
+            data: newMenu,
+            message: "Menu created successfully",
+          });
+        }
     } catch (error) {
       return res.status(500).json({
         status: "error",

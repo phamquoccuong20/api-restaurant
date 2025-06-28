@@ -2,14 +2,20 @@ const Table = require("../models/table");
 const cache = require("../cache/caching");
 
 class TableService {
-  async getAllTables() {
+  async getAllTables(page, limit) {
     try {
-      const cacheKey = "table_all";
+      const cacheKey = `table_page_${page}_limit_${limit}`;
       const cached = cache.get(cacheKey);
       if (cached) {
-        return { source: "cache", data: cached };
+        return { source: "table", data: cached };
       }
-      const data = await Table.find({ isActive: true });
+      const skip = (page - 1) * limit;
+
+      const data = await Table.find({ isActive: true })
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+
       cache.set(cacheKey, data);
 
       return data;

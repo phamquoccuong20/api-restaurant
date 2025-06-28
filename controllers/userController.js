@@ -78,12 +78,16 @@ const loginUser = async (req, res) => {
 };
 
 const getAllUsers = async (req, res) => {
-  try { 
-    const users = await userService.getAllUsers();  
+  try {
+    const { page, limit } = req.query;
+    const users = await userService.getAllUsers(page, limit);  
     return res.status(200).json({
       status: 200,
       message: "Users fetched successfully",
-      data: users
+      data: users.data,
+      total: users.length,
+      page,
+      limit,
     });
   }catch(error) {
     return res.status(error.statusCode).json({
@@ -94,7 +98,7 @@ const getAllUsers = async (req, res) => {
 }
 const getUserById = async (req, res) => {
   try {
-    const { id} = req.params;
+    const { id } = req.params;
     const user = await userService.getUserById(id);
     if(!user) {
       throw new AppError("User not found", HttpStatusCode.NotFound);

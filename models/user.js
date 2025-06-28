@@ -10,7 +10,7 @@ const userSchema = new mongoose.Schema(
     phone: { type: String, unique: true, required: true },
     role: { type: String, enum: ["ADMIN", "STAFF", "USER"], default: "USER" },
     status: { type: String, enum: ["ACTIVE", "INACTIVE"], default: "ACTIVE" },
-    refresh_token: String,
+    refreshToken: String,
     avatar: String,
     isActive: { type: Boolean, default: true },
     isDeleted: { type: Boolean, default: false },

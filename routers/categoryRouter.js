@@ -8,24 +8,12 @@ const {
 const { isAuthenticated, isAdmin } = require("../middleware/authMiddleware");
 
 //public routes
-router.get("/", categoryController.getAll);
+router.get("/all", categoryController.getAll);
 router.get("/:id", categoryController.getById);
 
 //protected routes (admin only)
-router.post(
-  "/",
-  isAuthenticated,
-  isAdmin,
-  validateCategory,
-  categoryController.create
-);
-router.put(
-  "/:id",
-  isAuthenticated,
-  isAdmin,
-  validateUpdateCategory,
-  categoryController.update
-);
-router.delete("/:id", isAuthenticated, isAdmin, categoryController.delete);
+router.post("/create", isAuthenticated, isAdmin, validateCategory, categoryController.create);
+router.put("/update/:id", isAuthenticated, isAdmin, validateUpdateCategory,categoryController.update);
+router.delete("/delete/:id", isAuthenticated, isAdmin, categoryController.delete);
 
 module.exports = router;

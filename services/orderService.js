@@ -2,16 +2,21 @@ const Order = require("../models/order");
 const cache = require("../cache/caching");
 
 class OrderService {
-  async getAllOrder() {
+  async getAllOrder(page, limit) {
     try {
-      const cacheKey = "order_all";
+      const cacheKey = `order_page_${page}_limit_${limit}`;
       const cached = cache.get(cacheKey);
       if (cached) {
-        return { source: "cache", data: cached };
+        return { source: "order", data: cached };
       }
-      const data = await Order.find({isAvailable: true}).populate('customer', "-password").populate('table');
-      cache.set(cacheKey, data);
+      const skip = (page - 1) * limit;
 
+      const data = await Order.find({isAvailable: true})
+      .populate('customer', "name phone")
+      .populate('table', "tableNumber capacity")
+      .skip(skip).limit(limit).sort({ createdAt: -1 });
+
+      cache.set(cacheKey, data);
       return data;
     } catch (error) {
       console.log(error);
@@ -44,7 +49,7 @@ class OrderService {
   async update(id, data) {
     try {
       const menu = await Order.findOneAndUpdate(
-        { _id: id, isDeleted: false },
+        { _id: id, isAvailable: false },
         data,
         {
           new: true,
@@ -61,7 +66,7 @@ class OrderService {
   async delete(id) {
     return await Order.findByIdAndUpdate(
       id,
-      { isDeleted: true },
+      { isAvailable: false },
       { new: true }
     );
   }

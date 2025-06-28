@@ -2,17 +2,21 @@ const Menu = require("../models/menu");
 const cache = require("../cache/caching");
 
 class MenuService {
-  async getAllMenus() {
+  async getAllMenus(page, limit) {
     try {
-      const cacheKey = "menu_all";
+      const cacheKey = `menu_page_${page}_limit_${limit}`;
       const cached = cache.get(cacheKey);
       if (cached) {
         return { source: "cache", data: cached };
       }
-      const data = await Menu.find({ isDeleted: false }).populate(
-        "category",
-        "name"
-      );
+      const skip = (page - 1) * limit;
+
+      const data = await Menu.find({ isDeleted: false })
+      .populate("category", "name")
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+      
       cache.set(cacheKey, data);
 
       return data;

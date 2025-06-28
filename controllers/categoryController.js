@@ -15,7 +15,7 @@ class CategoryController {
     } catch (error) {
       return res.status(error.statusCode).json({
         status: error.statusCode,
-        message: error.message,
+        message: error.message
       });
     }
   }

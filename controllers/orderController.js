@@ -4,10 +4,12 @@ const { HttpStatusCode } = require("axios");
 class MenuController {
   async getAll(req, res) {
     try {
-      const order = await orderService.getAllOrder();
+      const {page, limit} = req.query;
+      const order = await orderService.getAllOrder(page, limit);
       return res.status(200).json({
         status: "success",
-        data: order,
+        data: order.data,
+        total: order.length,
       });
     } catch (error) {
       return res.status(error.statusCode).json({
@@ -35,17 +37,16 @@ class MenuController {
     try {
       const newOrder = await orderService.create(req.body);
       if (newuser.status !== 201) {
-            throw new AppError(newOrder.message, HttpStatusCode.BadRequest);
-          } else {
-              return res.status(HttpStatusCode.Created).json({
-                status: "success",
-                data: newOrder, 
-                message: "Order created successfully",
-              });
-          }
-     
+          throw new AppError(newOrder.message, HttpStatusCode.BadRequest);
+        } else {
+          return res.status(HttpStatusCode.Created).json({
+          status: "success",
+          data: newOrder, 
+          message: "Order created successfully",
+        });
+      }
     } catch (error) {
-      return res.status(500).json({
+    return res.status(500).json({
         status: "error",
         message: error.message,
       });

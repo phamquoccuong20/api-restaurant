@@ -9,25 +9,12 @@ const { isAuthenticated, isAdmin } = require("../middleware/authMiddleware");
 const upload = require("../middleware/upload");
 
 //public routes
-router.get("/", menuController.getAll);
+router.get("/all", menuController.getAll);
 router.get("/:id", menuController.getById);
 
 //protected routes (admin only)
-router.post(
-  "/",
-  isAuthenticated,
-  isAdmin,
-  validateMenu,
-  upload.single("image_url"),
-  menuController.create
-);
-router.put(
-  "/:id",
-  // isAuthenticated,
-  // isAdmin,
-  validateUpdateMenu,
-  menuController.update
-);
-router.delete("/:id", isAuthenticated, isAdmin, menuController.delete);
+router.post("/create", isAuthenticated, isAdmin, validateMenu, upload.single("image_url"), menuController.create);
+router.put("/update/:id", isAuthenticated, isAdmin, validateUpdateMenu, menuController.update);
+router.delete("/delete/:id", isAuthenticated, isAdmin, menuController.delete);
 
 module.exports = router;
