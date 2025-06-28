@@ -157,4 +157,28 @@ const deleteUser = async (req, res) => {
   }
 }
 
-module.exports = { createUser, loginUser, getAllUsers,getUserById, updateUser, deleteUser, getMe, changePassword};
+const refreshToken = async (req, res) => {
+  try {
+    const { token } = req.body;
+    const data = await userService.refresh(token);
+
+    return res.status(200).json(data);
+  } catch (error) {
+     return res.status(error.statusCode).json({  
+      status: error.statusCode,
+      message: error.message
+    });
+  }
+};
+
+module.exports = { 
+  createUser,
+  loginUser,
+  getAllUsers,
+  getUserById,
+  updateUser,
+  deleteUser,
+  getMe,
+  changePassword,
+  refreshToken
+};
