@@ -87,29 +87,54 @@ const loginService = async (email, password) => {
           message: "Invalid password or email",
         };
       } else {
-        const refreshTokenSecret = nanoid();
         const payload = {
           userId: user._id,
           email: user.email,
-          password: user.password,
         };
-        const accessToken = jwt.sign(payload, process.env.JWT_SECRET, {
-          expiresIn: process.env.JWT_EXPRIE,
-        });
+        const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPRIE });
+        const refreshTokens = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: "7d" });
 
-        const refreshToken = jwt.sign(payload, refreshTokenSecret, {
-          expiresIn: "7d",
-        });
-
+        user.refreshToken = refreshTokens;
+        await user.save();
         return {
           status: 200,
           accessToken,
-          refreshToken,
+          refreshToken: user.refreshToken,
         };
       }
     }
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+    return { status: 500, errors: { msg: error.message } };
+  }
 };
+
+const refresh = async (token) => {
+  try {
+    const payload = jwt.verify(token, process.env.SECRET_KEY);
+
+    const user = await Users.findById(payload.id);
+    if(!user || user.refreshToken !== token) {
+      throw new Error("Invalid refresh token");
+    }
+
+    const data = { userId: user._id, email: user.email };
+
+    // Tạo access token mới.
+    const accessToken = jwt.sign(data, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPRIE });
+    // Tạo refresh token mới
+    const newRefreshToken = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: "7d" });
+
+    user.refreshToken = newRefreshToken;
+    await user.save();
+
+    return { accessToken, refreshToken: newRefreshToken };
+  } catch (error) {
+    console.log(error);
+    return { status: 500, errors: { msg: error.message } };
+  }
+};
+
 const getAllUsers = async (page, limit) => {
   const cacheKey = `user_all_${page}_${limit}`;
   const cached = cache.get(cacheKey);
@@ -163,4 +188,5 @@ module.exports = {
   updateUser,
   deleteUser,
   changePassword,
+  refresh
 };

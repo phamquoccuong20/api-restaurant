@@ -23,4 +23,7 @@ userRouter.delete("/:id", isAuthenticated, isAdmin, userController.deleteUser);
 //authenticated only
 userRouter.post("/change-password", isAuthenticated, userController.changePassword);
 
+// refresh token
+userRouter.post("/refresh", isAuthenticated, userController.refreshToken);
+
 module.exports = userRouter;
