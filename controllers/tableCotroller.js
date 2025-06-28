@@ -4,10 +4,12 @@ const { HttpStatusCode } = require("axios");
 class TableController {
   async getAll(req, res) {
     try {
-      const tables = await tableService.getAllTables();
+      const {page, limit} = req.query;
+      const table = await tableService.getAllTables(page, limit);
       return res.status(200).json({
         status: "success",
-        data: tables,
+        data: table.data,
+        total: table.length,
       });
     } catch (error) {
       return res.status(error.statusCode).json({
@@ -34,11 +36,16 @@ class TableController {
   async create(req, res) {
     try {
       const newTable = await tableService.create(req.body);
-      return res.status(HttpStatusCode.Created).json({
-        status: "success",
-        data: newTable,
-        message: "Table created successfully",
+
+      if (newTable.status !== 201) {
+            throw new AppError(newTable.message, HttpStatusCode.BadRequest);
+          } else {
+            return res.status(HttpStatusCode.Created).json({
+            status: "success",
+            data: newTable,
+          message: "Table created successfully",
       });
+        }
     } catch (error) {
       return res.status(500).json({
         status: "error",

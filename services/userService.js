@@ -114,15 +114,20 @@ const loginService = async (email, password) => {
     return { status: 500, errors: { msg: error.message } };
   }
 };
-const getAllUsers = async () => {
-  const cacheKey = "user_all";
+const getAllUsers = async (page, limit) => {
+  const cacheKey = `user_all_${page}_${limit}`;
   const cached = cache.get(cacheKey);
   if (cached) {
     return { source: "cache", data: cached };
   }
-  const users = await Users.find({ isDeleted: false }).select("-password");
-  cache.set(cacheKey, users);
-  return users;
+  const data = await Users.find({ isDeleted: false })
+  .select("-password")
+  .skip((page - 1) * limit)
+  .limit(limit)
+  .sort({ createdAt: -1 });
+
+  cache.set(cacheKey, data);
+  return data;
 };
 
 const getUserById = async (id) => {
