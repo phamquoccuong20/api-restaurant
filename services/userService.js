@@ -79,6 +79,14 @@ const loginService = async (email, password) => {
   try {
     let user = await Users.findOne({ email: email });
 
+    // Kiểm tra nếu không tìm thấy người dùng
+    if (!user) {
+      return {
+        status: 400,
+        message: "Invalid password or email",
+      };
+    }
+
     if (user) {
       const checkPassword = await bcrypt.compareSync(password, user.password);
       if (!checkPassword) {
@@ -100,6 +108,17 @@ const loginService = async (email, password) => {
           status: 200,
           accessToken,
           refreshToken: user.refreshToken,
+        const refreshTokenSecret = nanoid();
+        const payload = { userId: user._id, email: user.email };
+        const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPRIE });
+        const refreshToken = jwt.sign(payload, refreshTokenSecret, { expiresIn: "7d" });
+        
+        user.password = undefined;
+        return {
+          status: 200,
+          accessToken,
+          refreshToken,
+          data: user,
         };
       }
     }
@@ -172,7 +191,6 @@ const deleteUser = async (id) => {
       { isDeleted: true },
       { new: true }
     );
-    x;
     return user;
   } catch (error) {
     console.log(error);
