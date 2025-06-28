@@ -104,15 +104,6 @@ const loginService = async (email, password) => {
 
         user.refreshToken = refreshTokens;
         await user.save();
-        return {
-          status: 200,
-          accessToken,
-          refreshToken: user.refreshToken,
-        const refreshTokenSecret = nanoid();
-        const payload = { userId: user._id, email: user.email };
-        const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPRIE });
-        const refreshToken = jwt.sign(payload, refreshTokenSecret, { expiresIn: "7d" });
-        
         user.password = undefined;
         return {
           status: 200,
@@ -120,8 +111,8 @@ const loginService = async (email, password) => {
           refreshToken,
           data: user,
         };
-      }
     }
+  }
   } catch (error) {
     console.log(error);
     return { status: 500, errors: { msg: error.message } };
