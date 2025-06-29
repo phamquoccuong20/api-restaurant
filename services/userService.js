@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { nanoid } = require("nanoid");
 const cache = require("../cache/caching");
+const { refreshToken } = require("../controllers/userController");
 
 const salt = bcrypt.genSaltSync(12);
 
@@ -108,7 +109,7 @@ const loginService = async (email, password) => {
         return {
           status: 200,
           accessToken,
-          refreshToken,
+          refreshTokens,
           data: user,
         };
     }
