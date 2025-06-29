@@ -96,20 +96,16 @@ const loginService = async (email, password) => {
           message: "Invalid password or email",
         };
       } else {
-        const payload = {
-          userId: user._id,
-          email: user.email,
-        };
+        const payload = { userId: user._id, email: user.email };
         const accessToken = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPRIE });
         const refreshTokens = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: "7d" });
 
         user.refreshToken = refreshTokens;
         await user.save();
-        user.password = undefined;
         return {
           status: 200,
           accessToken,
-          refreshTokens,
+          refreshToken: user.refreshToken,
           data: user,
         };
     }

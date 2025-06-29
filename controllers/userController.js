@@ -46,11 +46,13 @@ const changePassword = async (req, res) => {
     const data = await userService.changePassword(user._id, oldPassword, newPassword);
     if(data.status !== 200) {
       throw new AppError(data.message, HttpStatusCode.BadRequest);
+    } else {
+      return res.status(200).json({
+        status: 200,
+        message: "Password changed successfully"
+      });
     }
-    return res.status(200).json({
-      status: 200,
-      message: "Password changed successfully"
-    });
+   
   }catch(error) {
     return res.status(error.statusCode).json({
       status: error.statusCode,
@@ -162,7 +164,11 @@ const refreshToken = async (req, res) => {
     const { token } = req.body;
     const data = await userService.refresh(token);
 
-    return res.status(200).json(data);
+    if (data.status !== 200) {
+      throw new AppError(data.message, HttpStatusCode.BadRequest);
+    } else {
+      return res.status(200).json(data);
+    }
   } catch (error) {
      return res.status(error.statusCode).json({  
       status: error.statusCode,
