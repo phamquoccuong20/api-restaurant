@@ -106,6 +106,7 @@ const loginService = async (email, password) => {
         user.password = undefined;
         user.deleted = undefined;
         user.isDeleted = undefined;
+        user.isActive = undefined;
         return {
           status: 200,
           accessToken,
