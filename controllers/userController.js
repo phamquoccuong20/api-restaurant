@@ -71,8 +71,6 @@ const loginUser = async (req, res) => {
     } else {
       return res.status(200).json(data);
     }
-
-    
   } catch (error) {
     return res.status(error.statusCode).json({
       status: error.statusCode,
