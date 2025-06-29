@@ -23,6 +23,7 @@ const createUser = async (req, res) => {
   }
 };
 
+
 const getMe = async (req, res) => {
   try {
     const user = req.user;
