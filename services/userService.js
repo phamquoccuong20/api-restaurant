@@ -101,6 +101,11 @@ const loginService = async (email, password) => {
 
         user.refreshToken = refreshTokens;
         await user.save();
+
+        user.password = undefined;
+        user.deleted = undefined;
+        user.isDeleted = undefined;
+        user.isActive = undefined;
         return {
           status: 200,
           accessToken,
