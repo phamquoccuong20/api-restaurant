@@ -100,6 +100,7 @@ const loginService = async (email, password) => {
           status: 200,
           accessToken,
           refreshToken: user.refreshToken,
+          data: user,
         };
       }
     }
