@@ -54,8 +54,7 @@ class TableService {
   }
 
   async delete(id) {
-    return await Table.findByIdAndUpdate(
-      id,
+    const data =  await Table.findByIdAndUpdate( id,
       { isActive: false },
       { new: true }
     );
