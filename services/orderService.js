@@ -4,7 +4,7 @@ const cache = require("../cache/caching");
 class OrderService {
   async getAllOrder(page, limit) {
     try {
-      const cacheKey = `order_page_${page}_limit_${limit}`;
+      const cacheKey = `order_all_${page}_limit_${limit}`;
       const cached = cache.get(cacheKey);
       if (cached) {
         return { source: "order", data: cached };
@@ -14,6 +14,7 @@ class OrderService {
       const data = await Order.find({isAvailable: true})
       .populate('customer', "name phone")
       .populate('table', "tableNumber capacity")
+      .populate('menu', "name price")
       .skip(skip).limit(limit).sort({ createdAt: -1 });
 
       cache.set(cacheKey, data);

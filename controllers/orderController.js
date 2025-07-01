@@ -1,5 +1,6 @@
 const orderService = require("../services/orderService");
 const { HttpStatusCode } = require("axios");
+const { AppError } = require("../middleware/errorHandler");
 
 class MenuController {
   async getAll(req, res) {
@@ -36,15 +37,12 @@ class MenuController {
   async create(req, res) {
     try {
       const newOrder = await orderService.create(req.body);
-      if (newuser.status !== 201) {
-          throw new AppError(newOrder.message, HttpStatusCode.BadRequest);
-        } else {
-          return res.status(HttpStatusCode.Created).json({
-          status: "success",
-          data: newOrder, 
-          message: "Order created successfully",
-        });
-      }
+      
+      return res.status(HttpStatusCode.Created).json({
+        status: "success",
+        data: newOrder, 
+        message: "Order created successfully",
+      });
     } catch (error) {
     return res.status(500).json({
         status: "error",

@@ -47,7 +47,7 @@ const updateTableSchema = Joi.object({
   body: Joi.object({
     tableNumber: Joi.string().optional(),
     capacity: Joi.number().optional(),
-    status: Joi.number().optional(),
+    status: Joi.string().optional(),
     location: Joi.number().optional(),
   }),
   params: Joi.object({
