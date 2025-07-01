@@ -9,8 +9,8 @@ const {
   isStaffOrAdmin,
 } = require("../middleware/authMiddleware");
 
-userRouter.post("/register", validateUser, userController.createUser);
-userRouter.post("/login", validateLogin, userController.loginUser);
+userRouter.post("/auth/register", validateUser, userController.createUser);
+userRouter.post("/auth/login", validateLogin, userController.loginUser);
 
 //user only
 userRouter.get("/me", isAuthenticated, userController.getMe);
@@ -27,6 +27,6 @@ userRouter.delete("/admin/delete/:id", isAuthenticated, isAdmin, userController.
 userRouter.post("/change-password", isAuthenticated, userController.changePassword);
 
 // refresh token
-userRouter.post("/refresh", isAuthenticated, userController.refreshToken);
+userRouter.post("/auth/refresh", isAuthenticated, userController.refreshToken);
 
 module.exports = userRouter;
