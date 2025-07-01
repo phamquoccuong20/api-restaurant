@@ -37,15 +37,11 @@ class TableController {
     try {
       const newTable = await tableService.create(req.body);
 
-      if (newTable.status !== 201) {
-            throw new AppError(newTable.message, HttpStatusCode.BadRequest);
-          } else {
-            return res.status(HttpStatusCode.Created).json({
-            status: "success",
-            data: newTable,
-          message: "Table created successfully",
+      return res.status(HttpStatusCode.Created).json({
+        status: "success",
+        data: newTable,
+        message: "Table created successfully",
       });
-        }
     } catch (error) {
       return res.status(500).json({
         status: "error",

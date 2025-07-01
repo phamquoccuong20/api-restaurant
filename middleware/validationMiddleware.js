@@ -23,7 +23,6 @@ const validation = (schema) => {
 
       return res.status(400).json({
         status: "error",
-        message: "Validation failed",
         errors: validationErrors,
       });
     }

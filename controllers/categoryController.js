@@ -38,15 +38,11 @@ class CategoryController {
     try {
       const newCategory = await categoryService.create(req.body);
 
-      if (newCategory.status !== 201) {
-      throw new AppError(newCategory.message, HttpStatusCode.BadRequest);
-    } else {
-        return res.status(HttpStatusCode.Created).json({
+      return res.status(HttpStatusCode.Created).json({
         status: "success",
         data: newCategory,
         message: "Category created successfully",
       });
-    }
     } catch (error) {
       return res.status(500).json({
         status: "error",

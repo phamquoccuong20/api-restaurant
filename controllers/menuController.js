@@ -40,15 +40,11 @@ class MenuController {
       const menuData = { ...req.body, image_url };
       const newMenu = await menuService.create(menuData);
 
-      if (newMenu.status !== 201) {
-            throw new AppError(newMenu.message, HttpStatusCode.BadRequest);
-          } else {
-            return res.status(HttpStatusCode.Created).json({
-            status: "success",
-            data: newMenu,
-            message: "Menu created successfully",
-          });
-        }
+      return res.status(HttpStatusCode.Created).json({
+        status: "success",
+        data: newMenu,
+        message: "Menu created successfully",
+      });
     } catch (error) {
       return res.status(500).json({
         status: "error",

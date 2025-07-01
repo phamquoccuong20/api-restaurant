@@ -1,7 +1,7 @@
 const express = require("express");
 const userController = require("../controllers/userController");
 const userRouter = express.Router();
-const validateUser = require("../validators/userValidator");
+const { validateLogin, validateUser } = require("../validators/userValidator");
 
 const {
   isAuthenticated,
@@ -10,7 +10,7 @@ const {
 } = require("../middleware/authMiddleware");
 
 userRouter.post("/register", validateUser, userController.createUser);
-userRouter.post("/login", userController.loginUser);
+userRouter.post("/login", validateLogin, userController.loginUser);
 
 //user only
 userRouter.get("/me", isAuthenticated, userController.getMe);
