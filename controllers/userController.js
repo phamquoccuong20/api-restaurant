@@ -6,6 +6,7 @@ const createUser = async (req, res) => {
   try {
     const { name, email, password, dateOfBirth, role, phone, confirmPassword, status } = req.body;
     const newuser = await userService.create({ name, email, password, dateOfBirth, role, status, phone, confirmPassword });
+    console.log(">>chechk create: ", newuser);
 
     if (newuser.status !== 201) {
       throw new AppError(newuser.message, HttpStatusCode.BadRequest);

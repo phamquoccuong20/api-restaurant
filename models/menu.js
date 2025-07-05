@@ -4,7 +4,7 @@ const mongoose_delete = require("mongoose-delete");
 
 const menuSchema = new mongoose.Schema(
   {
-    name: { type: String, required: true },
+    name: { type: String, required: true, unique: true, },
     price: { type: Number, required: true },
     description: { type: String, required: true },
     category: {
