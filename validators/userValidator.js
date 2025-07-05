@@ -63,7 +63,7 @@ const userSchema = Joi.object({
     }),
     role: Joi.string()
       .valid("ADMIN", "STAFF", "USER")
-      .default("USER")
+      .default("STAFF")
       .messages({
         "any.only": "Role must be either ADMIN, STAFF, or USER",
       }),

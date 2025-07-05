@@ -4,7 +4,7 @@ const mongoose_delete = require("mongoose-delete");
 const categorySchema = new mongoose.Schema(
   {
     name: { type: String, required: true, unique: true },
-    description: { type: String },
+    description: { type: String, index: true, },
     isActive: { type: Boolean, default: true },
   },
  {
