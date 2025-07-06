@@ -7,7 +7,7 @@ class MenuService {
       const cacheKey = `menu_page_${page}_limit_${limit}`;
       const cached = cache.get(cacheKey);
       if (cached) {
-        return { source: "cache", data: cached };
+        return { source: "menus", data: cached };
       }
       const skip = (page - 1) * limit;
 
@@ -19,16 +19,15 @@ class MenuService {
       
       const total = await Menu.countDocuments({isDeleted: false});
       const totalPages = Math.ceil( total / limit );
-
-      cache.set(cacheKey, data);
-
-      return {
-        status: 200,
+      const menus = {
         data,
         total,
         totalPages,
-        currentPage: page,
+        currentPage: page
       };
+      cache.set(cacheKey, menus);
+
+      return menus;
     } catch (error) {
       console.log(error);
       return { status: 500, errors: { msg: error.message } };

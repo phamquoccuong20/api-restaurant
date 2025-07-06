@@ -13,7 +13,7 @@ class MenuController {
       
       return res.status(200).json({
         status: "success",
-        data: menus
+        data: menus,
       });
     } catch (error) {
       return res.status(error.statusCode).json({

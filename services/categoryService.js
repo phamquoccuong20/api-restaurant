@@ -6,7 +6,7 @@ class CategoryService {
     const cacheKey = `category_all_${page}_${limit}`;
     const cached = cache.get(cacheKey);
     if (cached) {
-      return { source: "cache", data: cached };
+      return { source: "categories", data: cached };
     }
 
     const skip = (page - 1) * limit;
@@ -15,17 +15,19 @@ class CategoryService {
     .limit(limit)
     .sort({ createdAt: -1 });
 
-    cache.set(cacheKey, data);
-
     const total = await Category.countDocuments({isActive: true});
     const totalPages = Math.ceil(total / limit);
-
-    return {
+    
+    const categories = {
       data,
       total,
       totalPages,
-      currentPage: page,
+      currentPage: page
     };
+
+    cache.set(cacheKey, categories);
+
+    return categories;
   }
 
   async getById(id) {

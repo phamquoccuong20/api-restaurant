@@ -5,11 +5,15 @@ class TableController {
   async getAll(req, res) {
     try {
       const {page, limit} = req.query;
+      
       const table = await tableService.getAllTables(page, limit);
+      if (!table.data || table.data.length === 0) {
+        return res.status(204).json({ message: "No data found" }); // 204 = No Content
+      }
+
       return res.status(200).json({
         status: "success",
-        data: table.data,
-        total: table.length,
+        data: table,
       });
     } catch (error) {
       return res.status(error.statusCode).json({
