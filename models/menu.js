@@ -13,7 +13,6 @@ const menuSchema = new mongoose.Schema(
       required: true,
     },
     image_url: { type: String, required: true },
-    isAvailable: { type: Boolean, default: true },
     isDeleted: { type: Boolean, default: false },
   },
   {

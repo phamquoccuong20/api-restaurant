@@ -1,15 +1,19 @@
 const menuService = require("../services/menuService");
 const { HttpStatusCode } = require("axios");
+const { AppError } = require("../middleware/errorHandler");
 
 class MenuController {
   async getAll(req, res) {
     try {
-      const {page, limit} = req.query;
+      const { page, limit } = req.query;
       const menus = await menuService.getAllMenus(page, limit);
+      if (!menus.data || menus.data.length === 0) {
+        return res.status(204).json({ message: "No data found" }); // 204 = No Content
+      }
+      
       return res.status(200).json({
         status: "success",
-        data: menus.data,
-        total: menus.length,
+        data: menus
       });
     } catch (error) {
       return res.status(error.statusCode).json({

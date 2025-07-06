@@ -6,11 +6,17 @@ class MenuController {
   async getAll(req, res) {
     try {
       const {page, limit} = req.query;
+
       const order = await orderService.getAllOrder(page, limit);
+
+      if (!order.data || order.data.length === 0) {
+        return res.status(204).json({ message: "No data found" }); // 204 = No Content
+      }
+
       return res.status(200).json({
-        status: "success",
-        data: order.data,
-        total: order.length,
+      status: "Success",
+      data: order,
+      
       });
     } catch (error) {
       return res.status(error.statusCode).json({
@@ -19,7 +25,6 @@ class MenuController {
       });
     }
   }
-
   async getById(req, res) {
     try {
       const order = await orderService.getById(req.params.id);

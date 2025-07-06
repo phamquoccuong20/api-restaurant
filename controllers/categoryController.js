@@ -1,16 +1,19 @@
 const categoryService = require("../services/categoryService");
 const { HttpStatusCode } = require("axios");
+const { AppError } = require("../middleware/errorHandler");
+
 class CategoryController {
   async getAll(req, res) {
     try {
       const { page, limit } = req.query;
       const categories = await categoryService.getAllCategories(page, limit);
+      if (!categories.data || categories.data.length === 0) {
+        return res.status(204).json({ message: "No data found" }); // 204 = No Content
+      }
+
       return res.status(200).json({
         status: "success",
-        data: categories.data,
-        total: categories.length,
-        page,
-        limit,
+        data: categories
       });
     } catch (error) {
       return res.status(error.statusCode).json({
@@ -23,7 +26,7 @@ class CategoryController {
     try {
       const category = await categoryService.getById(req.params.id);
       return res.status(200).json({
-        status: "success",
+        status: 200,
         data: category,
       });
     } catch (error) {
@@ -37,11 +40,14 @@ class CategoryController {
   async create(req, res) {
     try {
       const newCategory = await categoryService.create(req.body);
+      if (newCategory.status !== 200) {
+        throw new AppError(newCategory.message, HttpStatusCode.BadRequest);
+      }
 
       return res.status(HttpStatusCode.Created).json({
         status: "success",
-        data: newCategory,
         message: "Category created successfully",
+        data: newCategory,
       });
     } catch (error) {
       return res.status(500).json({

@@ -12,7 +12,6 @@ const userSchema = new mongoose.Schema(
     status: { type: String, enum: ["ACTIVE", "INACTIVE"], default: "ACTIVE" },
     refreshToken: String,
     avatar: String,
-    isActive: { type: Boolean, default: true },
     isDeleted: { type: Boolean, default: false },
   },
   {

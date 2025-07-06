@@ -29,6 +29,11 @@ const errorHandler = (err, req, res, next) => {
     }));
   }
 
+  if (err.refreshToken === 'Invalid refresh token') {
+    errorResponse.status = 401;
+    errorResponse.message = 'Refresh token is invalid or expired';
+  }
+
   // Handle MongoDB duplicate key errors
   if (err.code === 11000) {
     errorResponse.status = 409;
@@ -39,7 +44,7 @@ const errorHandler = (err, req, res, next) => {
   // Log error (consider using a proper logging library in production)
   console.error(`[${new Date().toISOString()}] Error:`, err);
 
-  return res.status(status).json(errorResponse);
+  return res.status(status).json({errorResponse});
 };
 
 // Custom error class for application errors
@@ -48,6 +53,7 @@ class AppError extends Error {
     super(message);
     this.statusCode = statusCode;
     this.name = this.constructor.name;
+    this.refreshToken = this.constructor.refreshToken;
     Error.captureStackTrace(this, this.constructor);
   }
 }
