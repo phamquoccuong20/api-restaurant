@@ -8,7 +8,7 @@ class OrderService {
 
       const cached = cache.get(cacheKey);
       if (cached) {
-        return { source: "order", data: cached };
+        return { source: "orders", data: cached };
       }
       const skip = (page - 1) * limit;
 
@@ -20,14 +20,16 @@ class OrderService {
 
       const total = await Order.countDocuments({isAvailable: true});
       const totalPages = Math.ceil(total / limit);
-      cache.set(cacheKey, data, total);
 
-      return {
+      const orders = {
         data,
-        total,    
+        total,
         totalPages,
-        currentPage: page,
+        currentPage: page
       };
+      cache.set(cacheKey, orders);
+
+      return orders;
     } catch (error) {
       console.log(error);
       return { status: 500, errors: { msg: error.message } };

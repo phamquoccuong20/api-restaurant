@@ -150,7 +150,7 @@ const getAllUsers = async (page, limit) => {
   const cacheKey = `user_all_${page}_${limit}`;
   const cached = cache.get(cacheKey);
   if (cached) {
-    return { source: "cache", data: cached };
+    return { source: "users", data: cached };
   }
   
   const skip = (page - 1) * limit;
@@ -162,15 +162,16 @@ const getAllUsers = async (page, limit) => {
 
   const total = await Users.countDocuments({isDeleted: false});
   const totalPages = Math.ceil(total / limit);
-  cache.set(cacheKey, data);
-  
-  return {
-    status: 200,
+
+   const users = {
     data,
     total,
     totalPages,
-    currentPage: page,
+    currentPage: page
   };
+  cache.set(cacheKey, users);
+  
+  return users;
 };
 
 const getUserById = async (id) => {
