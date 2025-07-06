@@ -17,9 +17,18 @@ class MenuService {
       .limit(limit)
       .sort({ createdAt: -1 });
       
+      const total = await Menu.countDocuments({isDeleted: false});
+      const totalPages = Math.ceil( total / limit );
+
       cache.set(cacheKey, data);
 
-      return data;
+      return {
+        status: 200,
+        data,
+        total,
+        totalPages,
+        currentPage: page,
+      };
     } catch (error) {
       console.log(error);
       return { status: 500, errors: { msg: error.message } };

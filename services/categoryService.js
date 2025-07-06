@@ -8,12 +8,24 @@ class CategoryService {
     if (cached) {
       return { source: "cache", data: cached };
     }
-    const data = await Category.find({ isActive: true }).skip((page - 1) * limit)
-      .limit(limit)
-      .sort({ createdAt: -1 });
+
+    const skip = (page - 1) * limit;
+    const data = await Category.find({ isActive: true })
+    .skip(skip)
+    .limit(limit)
+    .sort({ createdAt: -1 });
+
     cache.set(cacheKey, data);
 
-    return data;
+    const total = await Category.countDocuments({isActive: true});
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      data,
+      total,
+      totalPages,
+      currentPage: page,
+    };
   }
 
   async getById(id) {
@@ -24,7 +36,7 @@ class CategoryService {
     try {
       const category = await Category.create(data);
       cache.del("category_all");
-      return category;
+      return {status: 200 , category};
     } catch (error) {
       console.log(error);
       return { status: 500, errors: { msg: error.message } };
@@ -49,7 +61,7 @@ class CategoryService {
     const category = await Category.findByIdAndUpdate(
       id,
       {
-        isDeleted: true,
+        isActive: false,
       },
       { new: true }
     );

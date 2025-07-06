@@ -105,7 +105,6 @@ const loginService = async (email, password) => {
         user.password = undefined;
         user.deleted = undefined;
         user.isDeleted = undefined;
-        user.isActive = undefined;
         return {
           status: 200,
           accessToken,
@@ -126,7 +125,7 @@ const refresh = async (token) => {
 
     const user = await Users.findById(payload.id);
     if(!user || user.refreshToken !== token) {
-      throw new Error("Invalid refresh token");
+     return { status: 400, message: "Invalid refresh token" };
     }
 
     const data = { userId: user._id, email: user.email };
@@ -137,9 +136,10 @@ const refresh = async (token) => {
     const newRefreshToken = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: "7d" });
 
     user.refreshToken = newRefreshToken;
+    console.log(">>check user: ", newRefreshToken);
     await user.save();
 
-    return { accessToken, refreshToken: newRefreshToken };
+    return { status: 200, accessToken, refreshToken: newRefreshToken };
   } catch (error) {
     console.log(error);
     return { status: 500, errors: { msg: error.message } };
@@ -152,14 +152,25 @@ const getAllUsers = async (page, limit) => {
   if (cached) {
     return { source: "cache", data: cached };
   }
+  
+  const skip = (page - 1) * limit;
   const data = await Users.find({ isDeleted: false })
   .select("-password")
-  .skip((page - 1) * limit)
+  .skip(skip)
   .limit(limit)
   .sort({ createdAt: -1 });
 
+  const total = await Users.countDocuments({isDeleted: false});
+  const totalPages = Math.ceil(total / limit);
   cache.set(cacheKey, data);
-  return data;
+  
+  return {
+    status: 200,
+    data,
+    total,
+    totalPages,
+    currentPage: page,
+  };
 };
 
 const getUserById = async (id) => {
@@ -172,10 +183,12 @@ const getUserById = async (id) => {
   cache.set(cacheKey, user);
   return user;
 };
+
 const updateUser = async (id, data) => {
   const user = await Users.findByIdAndUpdate(id, data, { new: true });
   return user;
 };
+
 const deleteUser = async (id) => {
   try {
     const user = await Users.findByIdAndUpdate(
@@ -183,7 +196,7 @@ const deleteUser = async (id) => {
       { isDeleted: true },
       { new: true }
     );
-    return user;
+    return { status: 200, data: user };
   } catch (error) {
     console.log(error);
     return { status: 500, errors: { msg: error.message } };

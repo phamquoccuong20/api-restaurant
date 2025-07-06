@@ -6,7 +6,6 @@ const createUser = async (req, res) => {
   try {
     const { name, email, password, dateOfBirth, role, phone, confirmPassword, status } = req.body;
     const newuser = await userService.create({ name, email, password, dateOfBirth, role, status, phone, confirmPassword });
-    console.log(">>chechk create: ", newuser);
 
     if (newuser.status !== 201) {
       throw new AppError(newuser.message, HttpStatusCode.BadRequest);
@@ -83,14 +82,16 @@ const loginUser = async (req, res) => {
 const getAllUsers = async (req, res) => {
   try {
     const { page, limit } = req.query;
-    const users = await userService.getAllUsers(page, limit);  
+
+    const users = await userService.getAllUsers(page, limit);
+    if (!users.data || users.data.length === 0) {
+      return res.status(204).json({ message: "No data found" }); // 204 = No Content
+    }
+
     return res.status(200).json({
-      status: 200,
+      status: "success",
       message: "Users fetched successfully",
-      data: users.data,
-      total: users.length,
-      page,
-      limit,
+      data: users
     });
   }catch(error) {
     return res.status(error.statusCode).json({
@@ -164,16 +165,15 @@ const refreshToken = async (req, res) => {
   try {
     const { token } = req.body;
     const data = await userService.refresh(token);
-
     if (data.status !== 200) {
       throw new AppError(data.message, HttpStatusCode.BadRequest);
-    } else {
-      return res.status(200).json(data);
     }
+    return res.status(200).json(data);
+    
   } catch (error) {
-     return res.status(error.statusCode).json({  
-      status: error.statusCode,
-      message: error.message
+     return res.status(error.statusCode || 500).json({
+      status: error.statusCode || 500,
+      message: error.message,
     });
   }
 };
