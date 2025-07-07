@@ -17,7 +17,7 @@ userRouter.get("/me", isAuthenticated, userController.getMe);
 
 //admin only
 
-userRouter.get("/admin/users", isAuthenticated, isAdmin, userController.getAllUsers);
+userRouter.get("/admin/users/all", isAuthenticated, isAdmin, userController.getAllUsers);
 userRouter.get("/admin/users/:id", isAuthenticated, isAdmin, userController.getUserById);
 userRouter.put("/admin/update/:id", isAuthenticated, isAdmin, userController.updateUser);
 userRouter.delete("/admin/delete/:id", isAuthenticated, isAdmin, userController.deleteUser);

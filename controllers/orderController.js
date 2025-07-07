@@ -2,7 +2,7 @@ const orderService = require("../services/orderService");
 const { HttpStatusCode } = require("axios");
 const { AppError } = require("../middleware/errorHandler");
 
-class MenuController {
+class OrderController {
   async getAll(req, res) {
     try {
       const {page, limit} = req.query;
@@ -10,12 +10,13 @@ class MenuController {
       const order = await orderService.getAllOrder(page, limit);
 
       if (!order.data || order.data.length === 0) {
-        return res.status(204).json({ message: "No data found" }); // 204 = No Content
+        return res.status(401).json({ data: {}, message: "No data found" });
       }
 
       return res.status(200).json({
       status: "Success",
-      data: order,
+      message: "Order fetched successfully",
+      order,
       
       });
     } catch (error) {
@@ -94,4 +95,4 @@ class MenuController {
     }
   }
 }
-module.exports = new MenuController();
+module.exports = new OrderController();

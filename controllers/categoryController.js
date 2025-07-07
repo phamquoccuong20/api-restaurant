@@ -6,14 +6,15 @@ class CategoryController {
   async getAll(req, res) {
     try {
       const { page, limit } = req.query;
-      const categories = await categoryService.getAllCategories(page, limit);
-      if (!categories.data || categories.data.length === 0) {
-        return res.status(204).json({ message: "No data found" }); // 204 = No Content
+      const category = await categoryService.getAllCategories(page, limit);
+      if (!category.data || category.data.length === 0) {
+        return res.status(401).json({ data: {}, message: "No data found" });
       }
 
       return res.status(200).json({
         status: "success",
-        data: categories
+        message: "Category fetched successfully",
+        category,
       });
     } catch (error) {
       return res.status(error.statusCode).json({

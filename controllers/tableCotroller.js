@@ -8,12 +8,13 @@ class TableController {
       
       const table = await tableService.getAllTables(page, limit);
       if (!table.data || table.data.length === 0) {
-        return res.status(204).json({ message: "No data found" }); // 204 = No Content
+        return res.status(401).json({ data: {}, message: "No data found" });
       }
 
       return res.status(200).json({
         status: "success",
-        data: table,
+        message: "Table fetched successfully",
+        table,
       });
     } catch (error) {
       return res.status(error.statusCode).json({

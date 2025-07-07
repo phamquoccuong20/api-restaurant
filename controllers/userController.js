@@ -83,15 +83,15 @@ const getAllUsers = async (req, res) => {
   try {
     const { page, limit } = req.query;
 
-    const users = await userService.getAllUsers(page, limit);
-    if (!users.data || users.data.length === 0) {
-      return res.status(204).json({ message: "No data found" }); // 204 = No Content
+    const user = await userService.getAllUsers(page, limit);
+    if (!user.data || user.data.length === 0) {
+      return res.status(401).json({ data: {}, message: "No data found" });
     }
 
     return res.status(200).json({
       status: "success",
       message: "Users fetched successfully",
-      data: users
+      user,
     });
   }catch(error) {
     return res.status(error.statusCode).json({

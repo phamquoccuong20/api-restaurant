@@ -11,7 +11,7 @@ class TableService {
       }
       const skip = (page - 1) * limit;
 
-      const data = await Table.find({ isActive: true })
+      const tables = await Table.find({ isActive: true })
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 });
@@ -19,16 +19,19 @@ class TableService {
       const total = await Table.countDocuments({isActive: true});
       const totalPages = Math.ceil(total / limit);
           
-      const tables = {
-        data,
-        total,
-        totalPages,
-        currentPage: page
+      const data = {
+        tables,
+        meta: {
+          total,
+          totalPages,
+          currentPage: +page,
+          limit: +limit
+        }
       };
 
-      cache.set(cacheKey, tables);
+      cache.set(cacheKey, data);
 
-      return tables;
+      return { data };
     } catch (error) {
       console.log(error);
       return { status: 500, errors: { msg: error.message } };

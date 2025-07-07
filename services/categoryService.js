@@ -10,7 +10,7 @@ class CategoryService {
     }
 
     const skip = (page - 1) * limit;
-    const data = await Category.find({ isActive: true })
+    const categories = await Category.find({ isActive: true })
     .skip(skip)
     .limit(limit)
     .sort({ createdAt: -1 });
@@ -18,16 +18,19 @@ class CategoryService {
     const total = await Category.countDocuments({isActive: true});
     const totalPages = Math.ceil(total / limit);
     
-    const categories = {
-      data,
-      total,
-      totalPages,
-      currentPage: page
+    const data = {
+      categories,
+      meta: {
+        total,
+        totalPages,
+        currentPage: +page,
+        limit: +limit
+      }
     };
 
-    cache.set(cacheKey, categories);
+    cache.set(cacheKey, data);
 
-    return categories;
+    return { data };
   }
 
   async getById(id) {
