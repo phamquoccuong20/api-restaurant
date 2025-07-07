@@ -11,7 +11,7 @@ class MenuService {
       }
       const skip = (page - 1) * limit;
 
-      const data = await Menu.find({ isDeleted: false })
+      const menus = await Menu.find({ isDeleted: false })
       .populate("category", "name")
       .skip(skip)
       .limit(limit)
@@ -19,15 +19,18 @@ class MenuService {
       
       const total = await Menu.countDocuments({isDeleted: false});
       const totalPages = Math.ceil( total / limit );
-      const menus = {
-        data,
-        total,
-        totalPages,
-        currentPage: page
+      const data = {
+       menus,
+       meta: {
+          total,
+          totalPages,
+          currentPage: +page,
+          limit: +limit
+        }
       };
-      cache.set(cacheKey, menus);
+      cache.set(cacheKey, data);
 
-      return menus;
+      return { data };
     } catch (error) {
       console.log(error);
       return { status: 500, errors: { msg: error.message } };

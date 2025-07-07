@@ -6,14 +6,15 @@ class MenuController {
   async getAll(req, res) {
     try {
       const { page, limit } = req.query;
-      const menus = await menuService.getAllMenus(page, limit);
-      if (!menus.data || menus.data.length === 0) {
-        return res.status(204).json({ message: "No data found" }); // 204 = No Content
+      const menu = await menuService.getAllMenus(page, limit);
+      if (!menu.data || menu.data.length === 0) {
+        return res.status(401).json({ data: {}, message: "No data found" });
       }
       
       return res.status(200).json({
         status: "success",
-        data: menus,
+        message: "Menu fetched successfully",
+        menu,
       });
     } catch (error) {
       return res.status(error.statusCode).json({

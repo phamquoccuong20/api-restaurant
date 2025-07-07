@@ -12,7 +12,7 @@ class OrderService {
       }
       const skip = (page - 1) * limit;
 
-      const data = await Order.find({isAvailable: true})
+      const orders = await Order.find({isAvailable: true})
       .populate('customer', "name phone")
       .populate('table', "tableNumber capacity")
       .populate('menu', "name price")
@@ -21,15 +21,18 @@ class OrderService {
       const total = await Order.countDocuments({isAvailable: true});
       const totalPages = Math.ceil(total / limit);
 
-      const orders = {
-        data,
-        total,
-        totalPages,
-        currentPage: page
+      const data = {
+        orders,
+        meta: {
+          total,
+          totalPages,
+          currentPage: +page,
+          limit: +limit
+        }
       };
-      cache.set(cacheKey, orders);
+      cache.set(cacheKey, data);
 
-      return orders;
+      return { data };
     } catch (error) {
       console.log(error);
       return { status: 500, errors: { msg: error.message } };

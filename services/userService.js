@@ -105,10 +105,11 @@ const loginService = async (email, password) => {
         user.password = undefined;
         user.deleted = undefined;
         user.isDeleted = undefined;
+        user.refreshToken = undefined;
         return {
           status: 200,
           accessToken,
-          refreshToken: user.refreshToken,
+          refreshTokens,
           data: user,
         };
     }
@@ -136,7 +137,6 @@ const refresh = async (token) => {
     const newRefreshToken = jwt.sign({ id: user._id }, process.env.SECRET_KEY, { expiresIn: "7d" });
 
     user.refreshToken = newRefreshToken;
-    console.log(">>check user: ", newRefreshToken);
     await user.save();
 
     return { status: 200, accessToken, refreshToken: newRefreshToken };
@@ -154,8 +154,8 @@ const getAllUsers = async (page, limit) => {
   }
   
   const skip = (page - 1) * limit;
-  const data = await Users.find({ isDeleted: false })
-  .select("-password")
+  const users = await Users.find({ isDeleted: false })
+  .select("-password -refreshToken")
   .skip(skip)
   .limit(limit)
   .sort({ createdAt: -1 });
@@ -163,15 +163,18 @@ const getAllUsers = async (page, limit) => {
   const total = await Users.countDocuments({isDeleted: false});
   const totalPages = Math.ceil(total / limit);
 
-   const users = {
-    data,
-    total,
-    totalPages,
-    currentPage: page
+   const data = {
+    users,
+    meta: {
+      total,
+      totalPages,
+      currentPage: +page,
+      limit: +limit
+    }
   };
-  cache.set(cacheKey, users);
-  
-  return users;
+  cache.set(cacheKey, data);
+
+  return { data };
 };
 
 const getUserById = async (id) => {
