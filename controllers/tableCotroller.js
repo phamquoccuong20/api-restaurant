@@ -1,5 +1,6 @@
 const tableService = require("../services/tableService");
 const { HttpStatusCode } = require("axios");
+const { AppError } = require("../middleware/errorHandler");
 
 class TableController {
   async getAll(req, res) {
@@ -41,16 +42,19 @@ class TableController {
   async create(req, res) {
     try {
       const newTable = await tableService.create(req.body);
+      if (newTable.status !== 201) {
+        throw new AppError(newTable.message, HttpStatusCode.BadRequest);
+      }
 
       return res.status(HttpStatusCode.Created).json({
         status: "success",
-        data: newTable,
         message: "Table created successfully",
+        data: newTable,
       });
     } catch (error) {
       return res.status(500).json({
         status: "error",
-        message: error.message,
+        message: error,
       });
     }
   }

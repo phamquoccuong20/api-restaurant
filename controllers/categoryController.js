@@ -41,7 +41,7 @@ class CategoryController {
   async create(req, res) {
     try {
       const newCategory = await categoryService.create(req.body);
-      if (newCategory.status !== 200) {
+      if (newCategory.status !== 201) {
         throw new AppError(newCategory.message, HttpStatusCode.BadRequest);
       }
 

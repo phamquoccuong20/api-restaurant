@@ -41,10 +41,10 @@ class CategoryService {
     try {
       const category = await Category.create(data);
       cache.del("category_all");
-      return {status: 200 , category};
+      return {status: 201 , category};
     } catch (error) {
       console.log(error);
-      return { status: 500, errors: { msg: error.message } };
+      return { status: 500, error: { msg: error.message } };
     }
   }
 

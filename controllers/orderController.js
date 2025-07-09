@@ -43,11 +43,14 @@ class OrderController {
   async create(req, res) {
     try {
       const newOrder = await orderService.create(req.body);
+      if (newOrder.status !== 201) {
+        throw new AppError(newOrder.message, HttpStatusCode.BadRequest);
+      }
       
       return res.status(HttpStatusCode.Created).json({
         status: "success",
-        data: newOrder, 
         message: "Order created successfully",
+        data: newOrder, 
       });
     } catch (error) {
     return res.status(500).json({
