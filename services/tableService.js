@@ -46,10 +46,10 @@ class TableService {
     try {
       const table = await Table.create(data);
       cache.del("table_all");
-      return table;
+      return { status: 201, table };
     } catch (error) {
       console.log(error);
-      return { status: 500, errors: { msg: error.message } };
+      return { status: 500, error: { msg: error.message } };
     }
   }
 

@@ -52,12 +52,12 @@ class OrderService {
       if (data.orderType === "takeaway" && data.table) {
         delete data.table;
       }
-      const menu = await Order.create(data);
+      const order = await Order.create(data);
       cache.del("order_all");
-      return menu;
+      return { status: 201, order };
     } catch (error) {
       console.log(error);
-      return { status: 500, errors: { msg: error.message } };
+      return { status: 500, error: { msg: error.message } };
     }
   }
 

@@ -45,10 +45,10 @@ class MenuService {
     try {
       const menu = await Menu.create(data);
       cache.del("menu_all");
-      return menu;
+      return {status: 201, menu };
     } catch (error) {
       console.log(error);
-      return { status: 500, errors: { msg: error.message } };
+      return { status: 500, error: { msg: error.message } };
     }
   }
 

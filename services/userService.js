@@ -71,7 +71,7 @@ const create = async (data) => {
     }
   } catch (error) {
     console.log(error);
-    return { status: 500, errors: { msg: error.message } };
+    return { status: 500, error: { msg: error.message } };
   }
 };
 

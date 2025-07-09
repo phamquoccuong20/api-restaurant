@@ -8,12 +8,6 @@ const createTableSchema = Joi.object({
       .messages({
         "string.empty": "Number of tables required",
         "any.required": "Number of tables required",
-      })
-      .min(1)
-      .max(100)
-      .messages({
-        "string.min": "The table must be at least 1 table long.",
-        "string.max": "Number of tables must be more than 50 tables",
       }),
     capacity: Joi.number()
       .required()
