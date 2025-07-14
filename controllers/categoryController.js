@@ -120,19 +120,5 @@ class CategoryController {
       });
     }
   }
-
-  async searchByCategory(req, res) {
-    try {
-      const { name } = req.query;
-      if ( !name ) {
-        return res.status(400).json({ message: 'Vui lòng nhập tên để tìm kiếm' });
-      }  
-      const category = await categoryService.searchByCategory(name);
-
-      return res.status(200).json(category);
-    } catch (error) {
-        return res.status(500).json({ message: 'Lỗi server', error: error.message });
-    }
-  }
 }
 module.exports = new CategoryController();

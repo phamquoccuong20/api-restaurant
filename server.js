@@ -10,6 +10,7 @@ const categoryRouter = require("./routers/categoryRouter");
 const tableRouter = require("./routers/tableRouter");
 const menuRouter = require("./routers/menuRouter");
 const orderRouter = require("./routers/orderRouter");
+const searchRouter = require("./routers/searchRouter");
 
 app.use(cors());
 //config req.body
@@ -30,6 +31,7 @@ app.use("/api/v1/categories", categoryRouter);
 app.use("/api/v1/tables", tableRouter);
 app.use("/api/v1/menus", menuRouter);
 app.use("/api/v1/orders", orderRouter);
+app.use("/api/v1/search", searchRouter);
 app.use((req, res) => {
   res.status(404).json({
     status: 404,
