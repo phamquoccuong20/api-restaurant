@@ -55,6 +55,7 @@ class CategoryService {
     });
     return category;
   }
+
   async delete(id) {
     return await Category.findByIdAndUpdate(
       id,
@@ -62,6 +63,7 @@ class CategoryService {
       { new: true }
     );
   }
+
   async deleteSoft(id) {
     const category = await Category.findByIdAndUpdate(
       id,
@@ -72,6 +74,7 @@ class CategoryService {
     );
     return category;
   }
+
   async restore(id) {
     const category = await Category.findByIdAndUpdate(
       id,
@@ -81,6 +84,18 @@ class CategoryService {
       { new: true }
     );
     return category;
+  }
+
+  async searchByCategory(name) {
+    try {
+      const regex = new RegExp(name, 'i'); // không phân biệt hoa thường
+      const search = await Category.find({ name: regex });
+
+      return search;
+    } catch (error) {
+      console.log(error);
+      throw new Error(error.message);
+    }
   }
 }
 

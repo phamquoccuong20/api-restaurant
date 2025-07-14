@@ -207,6 +207,26 @@ const deleteUser = async (id) => {
   }
 };
 
+const searchUsersByName = async ( name, email ) => {
+  try {
+    if (name) {
+    const regex = new RegExp(name, 'i');
+    return await Users.find({ name: regex });
+  }
+
+  if (email) {
+    const regex = new RegExp(email, 'i');
+    return await Users.find({ email: regex });
+  }
+
+    return [];
+  } catch (error) {
+    console.log(error);
+    return { status: 500, errors: { msg: error.message } };
+  }
+  
+}
+
 module.exports = {
   create,
   loginService,
@@ -215,5 +235,6 @@ module.exports = {
   updateUser,
   deleteUser,
   changePassword,
-  refresh
+  refresh,
+  searchUsersByName
 };

@@ -178,6 +178,20 @@ const refreshToken = async (req, res) => {
   }
 };
 
+const searchUser = async (req, res) => {
+  try {
+    const { name, email } = req.query;
+    if ( !name && !email ) {
+      return res.status(400).json({ message: 'Vui lòng nhập tên hoặc email để tìm kiếm' });
+    }
+    
+    const users = await userService.searchUsersByName( name, email );
+    return res.status(200).json({ users });
+  } catch (error) {
+    return res.status(500).json({ message: 'Lỗi server', error: error.message });
+  }
+}
+
 module.exports = { 
   createUser,
   loginUser,
@@ -187,5 +201,6 @@ module.exports = {
   deleteUser,
   getMe,
   changePassword,
-  refreshToken
+  refreshToken,
+  searchUser
 };

@@ -111,12 +111,28 @@ class TableController {
         data: deletedTable,
       }); 
     }catch(error) { 
-      return res.status(200).json({
+      return res.status(500).json({
         status: "error", 
         message: error.message,
       })
     }
   }
   
+  async searchByTable(req, res) {
+    try {
+      const { tableNumber } = req.query;
+      if(!tableNumber) {
+        return res.status(400).json({ message: 'Vui lòng nhập số bàn để tìm kiếm' });
+      }
+      const table = await tableService.searchByTable(tableNumber);
+
+      return res.status(200).json(table);
+    } catch (error) {
+       return res.status(500).json({
+        status: "error", 
+        message: error.message,
+      })
+    }
+  }
 }
 module.exports = new TableController();

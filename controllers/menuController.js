@@ -100,5 +100,19 @@ class MenuController {
       });
     }
   }
+
+  async searchByMenu(req, res) {
+    try {
+      const { name } = req.query;
+      if ( !name ) {
+        return res.status(400).json({ message: 'Vui lòng nhập tên để tìm kiếm' });
+      }  
+      const menu = await menuService.searchByMenu(name);
+  
+      return res.status(200).json(menu);
+    } catch (error) {
+      return res.status(500).json({ message: 'Lỗi server', error: error.message });
+    }
+  }
 }
 module.exports = new MenuController();

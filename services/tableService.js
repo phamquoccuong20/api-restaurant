@@ -85,6 +85,16 @@ class TableService {
     }
     return deletedTable;
   }
+
+  async searchByTable(tableNumber) {
+    try {
+      const regex = new RegExp(tableNumber, 'i'); // không phân biệt hoa thường
+      return await Table.find({ isActive: true, tableNumber: regex });
+    } catch (error) {
+      console.log(error);
+      throw new Error(error.message);
+    }
+  }
 }
 
 module.exports = new TableService();
