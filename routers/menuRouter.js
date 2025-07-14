@@ -17,4 +17,7 @@ router.post("/create", isAuthenticated, isAdmin, validateMenu, upload.single("im
 router.put("/update/:id", isAuthenticated, isAdmin, validateUpdateMenu, menuController.update);
 router.delete("/delete/:id", isAuthenticated, isAdmin, menuController.delete);
 
+// search name
+router.get("/search/menu", menuController.searchByMenu);
+
 module.exports = router;

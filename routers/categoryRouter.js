@@ -13,7 +13,10 @@ router.get("/:id", categoryController.getById);
 
 //protected routes (admin only)
 router.post("/create", isAuthenticated, isAdmin, validateCategory, categoryController.create);
-router.put("/update/:id", isAuthenticated, isAdmin, validateUpdateCategory,categoryController.update);
+router.put("/update/:id", isAuthenticated, isAdmin, validateUpdateCategory, categoryController.update);
 router.delete("/delete/:id", isAuthenticated, isAdmin, categoryController.delete);
+
+// search name
+router.get("/search/category", isAuthenticated, isAdmin, categoryController.searchByCategory);
 
 module.exports = router;

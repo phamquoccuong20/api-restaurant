@@ -26,10 +26,7 @@ class CategoryController {
   async getById(req, res) {
     try {
       const category = await categoryService.getById(req.params.id);
-      return res.status(200).json({
-        status: 200,
-        data: category,
-      });
+      return res.status(200).json(category);
     } catch (error) {
       return res.status(error.statusCode).json({
         status: error.statusCode,
@@ -100,6 +97,7 @@ class CategoryController {
       });
     }
   }
+
   async deleteSoft(req, res) {
     try {
       const id = req.params.id;
@@ -120,6 +118,20 @@ class CategoryController {
         status: "error",
         message: error.message,
       });
+    }
+  }
+
+  async searchByCategory(req, res) {
+    try {
+      const { name } = req.query;
+      if ( !name ) {
+        return res.status(400).json({ message: 'Vui lòng nhập tên để tìm kiếm' });
+      }  
+      const category = await categoryService.searchByCategory(name);
+
+      return res.status(200).json(category);
+    } catch (error) {
+        return res.status(500).json({ message: 'Lỗi server', error: error.message });
     }
   }
 }

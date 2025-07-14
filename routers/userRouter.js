@@ -29,4 +29,7 @@ userRouter.post("/change-password", isAuthenticated, userController.changePasswo
 // refresh token
 userRouter.post("/auth/refresh", userController.refreshToken);
 
+// search name or email
+userRouter.get('/admin/search', isAuthenticated, isAdmin, userController.searchUser);
+
 module.exports = userRouter;
