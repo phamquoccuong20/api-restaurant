@@ -81,9 +81,9 @@ const loginUser = async (req, res) => {
 
 const getAllUsers = async (req, res) => {
   try {
-    const { page, limit } = req.query;
+    const { page, limit, sort, field } = req.query;
 
-    const user = await userService.getAllUsers(page, limit);
+    const user = await userService.getAllUsers(page, limit, sort, field);
     if (!user.data || user.data.length === 0) {
       return res.status(401).json({ data: {}, message: "No data found" });
     }

@@ -5,8 +5,8 @@ const { AppError } = require("../middleware/errorHandler");
 class CategoryController {
   async getAll(req, res) {
     try {
-      const { page, limit } = req.query;
-      const category = await categoryService.getAllCategories(page, limit);
+      const { page, limit, sort, field } = req.query;
+      const category = await categoryService.getAllCategories(page, limit, sort, field);
       if (!category.data || category.data.length === 0) {
         return res.status(401).json({ data: {}, message: "No data found" });
       }

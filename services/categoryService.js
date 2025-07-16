@@ -1,19 +1,21 @@
 const Category = require("../models/category");
 const cache = require("../cache/caching");
+const { getSortOption } = require("../utils/sort.helper");
 
 class CategoryService {
-  async getAllCategories(page, limit) {
-    const cacheKey = `category_all_${page}_${limit}`;
+  async getAllCategories(page, limit, sort, field) {
+    const cacheKey = `category_all_${page}_${limit}_${sort}_${field}`;
     const cached = cache.get(cacheKey);
     if (cached) {
-      return { source: "categories", data: cached };
+      return { data: cached };
     }
 
+    let sortOption = getSortOption(sort, field);
     const skip = (page - 1) * limit;
     const categories = await Category.find({ isActive: true })
     .skip(skip)
     .limit(limit)
-    .sort({ createdAt: -1 });
+    .sort(sortOption);
 
     const total = await Category.countDocuments({isActive: true});
     const totalPages = Math.ceil(total / limit);
