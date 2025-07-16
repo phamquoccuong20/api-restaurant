@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { nanoid } = require("nanoid");
 const cache = require("../cache/caching");
+const { getSortOption } = require("../utils/sort.helper");
 
 const salt = bcrypt.genSaltSync(12);
 
@@ -146,19 +147,21 @@ const refresh = async (token) => {
   }
 };
 
-const getAllUsers = async (page, limit) => {
-  const cacheKey = `user_all_${page}_${limit}`;
+const getAllUsers = async (page, limit, sort, field) => {
+  const cacheKey = `user_all_${page}_${limit}_${sort}_${field}`;
   const cached = cache.get(cacheKey);
   if (cached) {
     return { source: "users", data: cached };
   }
+  let sortOption = getSortOption(sort, field);
+
   
   const skip = (page - 1) * limit;
   const users = await Users.find({ isDeleted: false })
   .select("-password -refreshToken")
   .skip(skip)
   .limit(limit)
-  .sort({ createdAt: -1 });
+  .sort(sortOption);
 
   const total = await Users.countDocuments({isDeleted: false});
   const totalPages = Math.ceil(total / limit);
