@@ -198,11 +198,7 @@ const updateUser = async (id, data) => {
 
 const deleteUser = async (id) => {
   try {
-    const user = await Users.findByIdAndUpdate(
-      id,
-      { isDeleted: true },
-      { new: true }
-    );
+    const user = await Users.findByIdAndUpdate( id, {isDeleted: true}, {new: true} );
     return { status: 200, data: user };
   } catch (error) {
     console.log(error);
@@ -210,16 +206,30 @@ const deleteUser = async (id) => {
   }
 };
 
-const searchUsersByName = async (keyword) => {
+const searchUsersByName = async (keyword, page, limit) => {
   try {
-    const search = await Users.find({
-      $or: [
-        { name: { $regex: keyword, $options: 'i' }},
-        { email: { $regex: keyword, $options: 'i' } }
-      ]
-    });
+    const skip = (page - 1) * limit;
 
-    return { search };
+    const search = await Users.find({
+      $or: [{ name: { $regex: keyword, $options: 'i' }}, { email: { $regex: keyword, $options: 'i' } }],
+      isDeleted: false
+    })
+    .select("-password -refreshToken")
+    .skip(skip)
+    .limit(limit);
+
+    const total = await Users.countDocuments({isDeleted: false});
+    const totalPages = Math.ceil(total / limit);
+
+    return {
+      search,
+      meta: {
+      total,
+      totalPages,
+      currentPage: +page,
+      limit: +limit
+    }
+    };
   } catch (error) {
     console.log(error);
     return { status: 500, errors: { msg: error.message } };

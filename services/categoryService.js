@@ -88,12 +88,28 @@ class CategoryService {
     return category;
   };
 
-  async searchByCategory(keyword) {
+  async searchByCategory(keyword, limit, page) {
     try {
-      const regex = new RegExp(keyword, 'i'); // không phân biệt hoa thường
-      const search = await Category.find({ name: regex });
+      const skip = (page - 1) * limit;
 
-      return search;
+      const regex = new RegExp(keyword, 'i'); // không phân biệt hoa thường
+      const search = await Category.find({ name: regex, isActive: true })
+      .select("-deleted")
+      .skip(skip)
+      .limit(limit);
+
+      const total = await Category.countDocuments({isActive: true});
+      const totalPages = Math.ceil(total / limit);
+
+      return {
+        search,
+        meta: {
+          total,
+          totalPages,
+          currentPage: +page,
+          limit: +limit
+        }
+      };
     } catch (error) {
       console.log(error);
       throw new Error(error.message);
