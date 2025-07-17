@@ -180,12 +180,12 @@ const refreshToken = async (req, res) => {
 
 const searchUser = async (req, res) => {
   try {
-    const { keyword } = req.query;
+    const { keyword, page, limit } = req.query;
     if (!keyword) {
       return res.status(400).json({ status: 400, message: 'Vui lòng nhập ký tự để tìm kiếm' });
     }
 
-    const search = await userService.searchUsersByName(keyword);
+    const search = await userService.searchUsersByName(keyword, page, limit);
 
     return res.status(200).json({ status: 200, data: search });
   } catch (error) {

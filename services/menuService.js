@@ -19,6 +19,7 @@ class MenuService {
       
       const total = await Menu.countDocuments({isDeleted: false});
       const totalPages = Math.ceil( total / limit );
+
       const data = {
        menus,
        meta: {
@@ -73,12 +74,29 @@ class MenuService {
     return await Menu.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
   };
 
-  async searchByMenu(keyword) {
+  async searchByMenu(keyword, limit, page) {
     try {
-      const regex = new RegExp(keyword, 'i'); // không phân biệt hoa thường
-      const search = await Menu.find({ name: regex });
+      const skip = (page - 1) * limit;
 
-      return search;
+      const regex = new RegExp(keyword, 'i'); // không phân biệt hoa thường
+      const search = await Menu.find({ name: regex, isDeleted: false })
+      .select("-deleted")
+      .populate("category", "name")
+      .skip(skip)
+      .limit(limit);
+
+      const total = await Menu.countDocuments({isDeleted: false});
+      const totalPages = Math.ceil(total / limit);
+
+      return {
+        search,
+        meta: {
+          total,
+          totalPages,
+          currentPage: +page,
+          limit: +limit
+        }
+      };
     } catch (error) {
       console.log(error);
       throw new Error(error.message);

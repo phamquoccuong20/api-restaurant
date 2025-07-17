@@ -123,12 +123,12 @@ class CategoryController {
 
   async searchByCategory(req, res) {
     try {
-      const { keyword } = req.query;
+      const { keyword, limit, page } = req.query;
       if (!keyword) {
         return res.status(400).json({ status: 400, message: 'Vui lòng nhập ký tự để tìm kiếm' });
       }
 
-      const search = await categoryService.searchByCategory(keyword);
+      const search = await categoryService.searchByCategory(keyword, limit, page);
 
       return res.status(200).json({ status: 200, data: search });
     } catch (error) {

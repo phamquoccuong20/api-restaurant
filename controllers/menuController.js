@@ -103,12 +103,12 @@ class MenuController {
 
   async searchByMenu(req, res) {
     try {
-      const { keyword } = req.query;
+      const { keyword, limit, page } = req.query;
       if (!keyword) {
         return res.status(400).json({ status: 400, message: 'Vui lòng nhập ký tự để tìm kiếm' });
       }
     
-      const search = await menuService.searchByMenu(keyword);
+      const search = await menuService.searchByMenu(keyword, limit, page);
     
       return res.status(200).json({ status: 200, data: search });
     } catch (error) {

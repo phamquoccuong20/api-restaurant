@@ -12,6 +12,7 @@ class TableService {
       const skip = (page - 1) * limit;
 
       const tables = await Table.find({ isActive: true })
+      .select("-deleted -isDeleted")
       .skip(skip)
       .limit(limit)
       .sort({ createdAt: -1 });
@@ -86,17 +87,33 @@ class TableService {
     return deletedTable;
   };
 
-  async searchByTable(keyword) {
+  async searchByTable(keyword, limit, page) {
     try {
-      const regex = new RegExp(keyword, 'i'); // không phân biệt hoa thường
-      const search = await Table.find({ tableNumber: regex });
+      const skip = (page - 1) * limit;
 
-      return search;
+      const regex = new RegExp(keyword, 'i'); // không phân biệt hoa thường
+      const search = await Table.find({ tableNumber: regex, isActive: true })
+      .select("-deleted -isDeleted")
+      .skip(skip)
+      .limit(limit);
+
+      const total = await Table.countDocuments({isActive: true});
+      const totalPages = Math.ceil(total / limit);
+
+      return {
+        search,
+        meta: {
+          total,
+          totalPages,
+          currentPage: +page,
+          limit: +limit
+        }
+      };
     } catch (error) {
       console.log(error);
       throw new Error(error.message);
     }
-  }
+  };
 }
 
 module.exports = new TableService();
