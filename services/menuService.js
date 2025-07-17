@@ -71,6 +71,18 @@ class MenuService {
 
   async delete(id) {
     return await Menu.findByIdAndUpdate(id, { isDeleted: true }, { new: true });
+  };
+
+  async searchByMenu(keyword) {
+    try {
+      const regex = new RegExp(keyword, 'i'); // không phân biệt hoa thường
+      const search = await Menu.find({ name: regex });
+
+      return search;
+    } catch (error) {
+      console.log(error);
+      throw new Error(error.message);
+    }
   }
 }
 

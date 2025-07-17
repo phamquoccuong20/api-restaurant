@@ -16,4 +16,6 @@ router.post("/create", isAuthenticated, isAdmin, validateTable, tableController.
 router.put("/update/:id",isAuthenticated, isAdmin, validateUpdateTable, tableController.update);
 router.delete("/delete/:id", isAuthenticated, isAdmin, tableController.delete);
 
+router.get("/search/table", tableController.searchByTable);
+
 module.exports = router;

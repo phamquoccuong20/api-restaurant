@@ -84,6 +84,18 @@ class TableService {
       throw new Error("Table not found");
     }
     return deletedTable;
+  };
+
+  async searchByTable(keyword) {
+    try {
+      const regex = new RegExp(keyword, 'i'); // không phân biệt hoa thường
+      const search = await Table.find({ tableNumber: regex });
+
+      return search;
+    } catch (error) {
+      console.log(error);
+      throw new Error(error.message);
+    }
   }
 }
 
