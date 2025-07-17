@@ -119,6 +119,21 @@ class CategoryController {
         message: error.message,
       });
     }
+  };
+
+  async searchByCategory(req, res) {
+    try {
+      const { keyword } = req.query;
+      if (!keyword) {
+        return res.status(400).json({ status: 400, message: 'Vui lòng nhập ký tự để tìm kiếm' });
+      }
+
+      const search = await categoryService.searchByCategory(keyword);
+
+      return res.status(200).json({ status: 200, data: search });
+    } catch (error) {
+      return res.status(500).json({ message: 'Lỗi server', error: error.message });
+    }
   }
 }
 module.exports = new CategoryController();

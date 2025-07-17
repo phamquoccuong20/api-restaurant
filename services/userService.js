@@ -210,6 +210,22 @@ const deleteUser = async (id) => {
   }
 };
 
+const searchUsersByName = async (keyword) => {
+  try {
+    const search = await Users.find({
+      $or: [
+        { name: { $regex: keyword, $options: 'i' }},
+        { email: { $regex: keyword, $options: 'i' } }
+      ]
+    });
+
+    return { search };
+  } catch (error) {
+    console.log(error);
+    return { status: 500, errors: { msg: error.message } };
+  }
+};
+
 module.exports = {
   create,
   loginService,
@@ -219,4 +235,5 @@ module.exports = {
   deleteUser,
   changePassword,
   refresh,
+  searchUsersByName
 };

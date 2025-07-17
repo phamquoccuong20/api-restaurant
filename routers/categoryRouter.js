@@ -16,5 +16,6 @@ router.post("/create", isAuthenticated, isAdmin, validateCategory, categoryContr
 router.put("/update/:id", isAuthenticated, isAdmin, validateUpdateCategory, categoryController.update);
 router.delete("/delete/:id", isAuthenticated, isAdmin, categoryController.delete);
 
+router.get("/search/category", categoryController.searchByCategory);
 
 module.exports = router;

@@ -86,6 +86,18 @@ class CategoryService {
       { new: true }
     );
     return category;
+  };
+
+  async searchByCategory(keyword) {
+    try {
+      const regex = new RegExp(keyword, 'i'); // không phân biệt hoa thường
+      const search = await Category.find({ name: regex });
+
+      return search;
+    } catch (error) {
+      console.log(error);
+      throw new Error(error.message);
+    }
   }
 }
 
